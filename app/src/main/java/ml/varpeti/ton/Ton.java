@@ -77,7 +77,12 @@ public class Ton implements Serializable, Cloneable
 
     public String first()
     {
-        return this.keySet().iterator().next();
+        return keyvalues.keySet().iterator().next();
+    }
+
+    public Boolean isEmpty()
+    {
+        return keyvalues.isEmpty();
     }
 
     //*/// Extra HasMap manipulation

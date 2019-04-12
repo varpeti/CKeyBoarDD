@@ -11,5 +11,6 @@ class CKBDDsettings : AppCompatActivity()
         super.onCreate(savedInstanceState, persistentState)
         setContentView(R.layout.ckbdd_settings_main)
         //TODO
+        //TODO permissions
     }
 }
