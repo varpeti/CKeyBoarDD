@@ -1,0 +1,33 @@
+main
+    0
+        num
+    1
+        a1
+    2
+        a2
+    3
+        a3
+    4
+        a4
+shift
+    0
+        snum
+    1
+        sa1
+    2
+        sa2
+    3
+        sa3
+    4
+        a4
+caps
+    0
+        cnum
+    1
+        ca1
+    2
+        ca2
+    3
+        ca3
+    4
+        a4
