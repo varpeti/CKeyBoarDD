@@ -1,20 +1,23 @@
 package ml.varpeti.ckeyboardd
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.graphics.Color
 import android.inputmethodservice.InputMethodService
 import android.os.Environment
+import android.support.v4.content.ContextCompat
 import android.util.Log
 import android.view.KeyCharacterMap
 import android.view.KeyEvent
-import android.view.KeyEvent.*
+import android.view.KeyEvent.ACTION_DOWN
+import android.view.KeyEvent.ACTION_UP
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.LinearLayout.HORIZONTAL
 import kotlinx.android.synthetic.main.ckbdd_key.view.*
 import kotlinx.android.synthetic.main.ckbdd_keyboard.view.*
 import ml.varpeti.ton.Ton
-import java.lang.Exception
 import java.text.ParseException
 
 
@@ -24,6 +27,12 @@ class CKBDDservice : InputMethodService()
 
     override fun onCreateInputView(): View
     {
+        if (!checkPermission())
+        {
+            Log.e("|||","Missing external storage permission!")
+            return View(this)
+        }
+
         val ex = Environment.getExternalStorageDirectory()
         val bs = Ton.parsefromFile("${ex.absolutePath}/CKeyBoarDD/b.ton") //Buttons
         val rs = Ton.parsefromFile("${ex.absolutePath}/CKeyBoarDD/r.ton") //Rows
@@ -41,6 +50,18 @@ class CKBDDservice : InputMethodService()
         if (!layouts.containsKey("main")) throw Exception("The 'main' keyboard not found")
 
         return layouts["main"]!!
+    }
+
+    private fun checkPermission() : Boolean
+    {
+        //Jogok meglétének ellenőrzése
+        return when
+        {
+            ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED -> false
+            ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED -> false
+            else -> true
+        }
+
     }
 
 
@@ -230,6 +251,28 @@ class CKBDDservice : InputMethodService()
                             Log.e("|||","The $kb keyboard not found!")
                         }
 
+                    }
+                }
+                "delete" ->
+                {
+                    if (!c.get("delete").isEmpty)
+                    {
+                        when (c.get("delete").first())
+                        {
+                            "word" ->
+                            {
+                                // it will delete a word the cursor currently in
+                                val btext = currentInputConnection.getTextBeforeCursor(30,0) // max 30 char before
+                                val atext = currentInputConnection.getTextAfterCursor(30,0) // and after
+                                var bi = 0
+                                var ai = 0
+                                btext.findLast{ ch -> bi++; ch == ' ' || ch == '\n'}
+                                atext.find    { ch -> ai++; ch == ' ' || ch == '\n'}
+                                currentInputConnection.deleteSurroundingText(bi,ai)
+                            }
+                            "all" -> currentInputConnection.deleteSurroundingText(Int.MAX_VALUE,Int.MAX_VALUE)
+                            else -> Log.e("|||","Cannot delete (${c.get("delete").first()})")
+                        }
                     }
                 }
                 "settings" ->

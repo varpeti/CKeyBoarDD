@@ -152,6 +152,10 @@ ctrl
         normal
             0
                 ctrl
+        long
+            0
+                switch
+                    smiley
 space
     show
         size
@@ -174,6 +178,10 @@ backspace
             0
                 keycode
                     67
+        long
+            0
+                delete
+                    word
 return
     show
         primary
