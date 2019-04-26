@@ -27,8 +27,10 @@ class CKBDDsettings : AppCompatActivity()
 
     private fun start()
     {
+        //TODO a fejlesztés végén csak akkor ha még nem létezik
         //Kiírom a default keyboardot az SD kártyára
         File(ex.absolutePath + "/CKeyBoarDD").mkdir()
+
         copyResources(R.raw.b,"b.ton")
         copyResources(R.raw.r,"r.ton")
         copyResources(R.raw.k,"k.ton")

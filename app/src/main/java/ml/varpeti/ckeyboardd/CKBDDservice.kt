@@ -2,7 +2,6 @@ package ml.varpeti.ckeyboardd
 
 import android.Manifest
 import android.content.pm.PackageManager
-import android.content.res.Resources
 import android.graphics.Color
 import android.inputmethodservice.InputMethodService
 import android.os.Environment
@@ -25,32 +24,13 @@ class CKBDDservice : InputMethodService()
 {
     private val layouts = HashMap<String,View>()
 
-    override fun onCreateInputView(): View
-    {
-        if (!checkPermission())
-        {
-            Log.e("|||","Missing external storage permission!")
-            return View(this)
-        }
-
-        val ex = Environment.getExternalStorageDirectory()
-        val bs = Ton.parsefromFile("${ex.absolutePath}/CKeyBoarDD/b.ton") //Buttons
-        val rs = Ton.parsefromFile("${ex.absolutePath}/CKeyBoarDD/r.ton") //Rows
-        val ks = Ton.parsefromFile("${ex.absolutePath}/CKeyBoarDD/k.ton") //Keyboards
-
-        for (k in ks.keySet()) // Keyboards
-        {
-            val layout = layoutInflater.inflate(R.layout.ckbdd_keyboard, null).apply{
-                val keyboard = keyboard
-                rows(rs,bs,ks.get(k),keyboard)
-            }
-            layouts[k] = layout
-        }
-
-        if (!layouts.containsKey("main")) throw Exception("The 'main' keyboard not found")
-
-        return layouts["main"]!!
-    }
+    //Global Sizes
+    private var buttonsHeight = 100
+    private var buttonsHorizontalMargin = 2
+    private var buttonsVerticalMargin = 2
+    private var buttonsPrimaryTextSize = 25F
+    private var buttonsSecondaryTextSize = 18F
+    //TODO Global colors
 
     private fun checkPermission() : Boolean
     {
@@ -64,42 +44,78 @@ class CKBDDservice : InputMethodService()
 
     }
 
-
-    private fun rows(rs : Ton, bs : Ton, k : Ton, keyboard: LinearLayout)
+    override fun onCreateInputView(): View
     {
-        for (ki in k.values())
+        if (!checkPermission())
         {
-            //Log.i("|||", "${ki.first()} ${rs.containsKey(ki.first())}")
-            if (!ki.isEmpty && rs.containsKey(ki.first()))
+            Log.e("|||","Missing external storage permission!") //TODO
+            return View(this)
+        }
+
+        //TODO Ton files error handling
+
+        val ex = Environment.getExternalStorageDirectory()
+        val bs = Ton.parsefromFile("${ex.absolutePath}/CKeyBoarDD/b.ton") //Buttons
+        val rs = Ton.parsefromFile("${ex.absolutePath}/CKeyBoarDD/r.ton") //Rows
+        val ks = Ton.parsefromFile("${ex.absolutePath}/CKeyBoarDD/k.ton") //Keyboards
+
+        for (kkey in ks.keySet()) // Keyboards
+        {
+            if (ks.get(kkey).containsKey("settings"))
             {
-                val row = LinearLayout(this@CKBDDservice)
-                row.orientation = HORIZONTAL
-
-                val r = rs.get(ki.first())
-
-                buttons(bs,r,row)
-
-                row.setBackgroundColor(Color.parseColor("#404040"))
-                keyboard.addView(row)
+                val settings = ks.get(kkey).get("settings")
+                for (key in settings.keySet())
+                {
+                    if (!settings.get(key).isEmpty) when (key)
+                    {
+                        "buttonsHeight" -> buttonsHeight = settings.get(key).first().toInt()
+                        "buttonsHorizontalMargin" -> buttonsHorizontalMargin = settings.get(key).first().toInt()
+                        "buttonsVerticalMargin" -> buttonsVerticalMargin = settings.get(key).first().toInt()
+                        "buttonsPrimaryTextSize" -> buttonsPrimaryTextSize = settings.get(key).first().toFloat()
+                        "buttonsSecondaryTextSize" -> buttonsSecondaryTextSize = settings.get(key).first().toFloat()
+                    }
+                }
             }
+
+            if (ks.get(kkey).containsKey("rows"))
+            {
+                val layout = layoutInflater.inflate(R.layout.ckbdd_keyboard, null).apply{
+                    val keyboard = keyboard
+                    rows(rs,bs,ks.get(kkey).get("rows").keyArrayList,keyboard)
+                }
+                layouts[kkey] = layout
+            }
+        }
+
+        if (!layouts.containsKey("main")) throw Exception("The 'main' keyboard not found")
+
+        return layouts["main"]!!
+    }
+
+    private fun rows(rs : Ton, bs : Ton, rowkeys : ArrayList<String>, keyboard: LinearLayout)
+    {
+        for (rkey in rowkeys)
+        {
+            val rowLinearLayout = LinearLayout(this@CKBDDservice)
+            rowLinearLayout.orientation = HORIZONTAL
+
+            val row = rs.get(rkey)
+
+            buttons(bs,row.keyArrayList,rowLinearLayout)
+
+            rowLinearLayout.setBackgroundColor(Color.parseColor("#404040"))
+            keyboard.addView(rowLinearLayout)
         }
     }
 
 
-    private fun buttons(bs : Ton, r : Ton, row : LinearLayout)
+    private fun buttons(bs : Ton, buttonskeys : ArrayList<String>, rowLinearLayout : LinearLayout)
     {
-        for (r in r.values()) if (!r.isEmpty && bs.containsKey(r.first()))
+        for (bkey in buttonskeys) if (bs.containsKey(bkey))
         {
-            val b = bs.get(r.first()) //button
+            val b = bs.get(bkey) //button
 
             val key = layoutInflater.inflate(R.layout.ckbdd_key, null).apply {
-
-                // TODO
-                val buttonsInOneRow = 10
-                val horizontalMargin = 2
-                val verticalMargin = 2
-                val primaryTextSize = 25F
-                val secondaryTextSize = 18F
                 var buttonSize = 1F
 
                 //Show
@@ -109,12 +125,12 @@ class CKBDDservice : InputMethodService()
                     if (show.containsKey("primary") && !show.get("primary").isEmpty)
                     {
                         primary.text = b.get("show").get("primary").first()
-                        primary.textSize=primaryTextSize
+                        primary.textSize=buttonsPrimaryTextSize
                     }
                     if (show.containsKey("secondary") && !show.get("secondary").isEmpty)
                     {
                         secondary.text = b.get("show").get("secondary").first()
-                        secondary.textSize=secondaryTextSize
+                        secondary.textSize=buttonsSecondaryTextSize
                     }
                     if (show.containsKey("size")  && !show.get("size").isEmpty)
                     {
@@ -139,16 +155,16 @@ class CKBDDservice : InputMethodService()
                 //TODO colors
 
                 //Size
-                val size = ( Resources.getSystem().displayMetrics.widthPixels/buttonsInOneRow - (verticalMargin*2) )
-                val layoutparams = LinearLayout.LayoutParams(Math.round(size * buttonSize), Math.round(size * 1.2F))
+                val layoutparams = LinearLayout.LayoutParams(0,buttonsHeight)
+                layoutparams.weight=buttonSize
 
                 //Margin
-                layoutparams.setMargins(verticalMargin, horizontalMargin, verticalMargin, horizontalMargin)
+                layoutparams.setMargins(buttonsVerticalMargin, buttonsHorizontalMargin, buttonsVerticalMargin, buttonsHorizontalMargin)
 
                 key.layoutParams = layoutparams
             }
 
-            row.addView(key)
+            rowLinearLayout.addView(key)
         }
     }
 
@@ -172,12 +188,26 @@ class CKBDDservice : InputMethodService()
             if (c.isEmpty) continue
             when (c.first())
             {
-                "print" ->
+                "print" -> //Print out the characters.
                 {
-                    /*
-                    // Just print the charaters
-                    currentInputConnection.commitText(c.get("print").first(), 1)
-                    */
+                    val charArray = c.get("print").first().toCharArray()
+                    if (ctrl && charArray.size==1) // if only one char and ctrl is down
+                    {
+                        val keyCode = charArray[0].toInt()
+                        if (keyCode>= 32 && keyCode < 127)
+                        {
+                            // https://en.wikipedia.org/wiki/Control_character#How_control_characters_map_to_keyboards
+                            currentInputConnection.commitText((keyCode and 31).toChar().toString(), 1)
+                        }
+                    }
+                    else
+                    {
+                        currentInputConnection.commitText(c.get("print").first(), 1)
+                    }
+                    ctrl=false
+                }
+                "hit" -> //Trying to hit the characters as keyEvents
+                {
 
                     /*
                     // It wont work other input fields but android.
@@ -189,7 +219,7 @@ class CKBDDservice : InputMethodService()
                     // If ctrl is toggled, only 1 char is coming, and it can be turned into a control char then do it.
                     if (ctrl && charArray.size==1)
                     {
-                        var keyCode = charArray[0].toInt()
+                        val keyCode = charArray[0].toInt()
                         if (keyCode>= 32 && keyCode < 127)
                         {
                             // https://en.wikipedia.org/wiki/Control_character#How_control_characters_map_to_keyboards
@@ -198,7 +228,7 @@ class CKBDDservice : InputMethodService()
                     }
                     else
                     {
-                        //
+                        // Map the characters with KeyCharacterMap
                         val charMap = KeyCharacterMap.load(KeyCharacterMap.FULL)
                         val events = charMap.getEvents(charArray)
 
@@ -216,7 +246,7 @@ class CKBDDservice : InputMethodService()
                     }
                     ctrl=false
                 }
-                "keycode" ->
+                "keycode" -> //This'll hit the keycode KeyEvent
                 {
                     if (!c.get("keycode").isEmpty)
                     {

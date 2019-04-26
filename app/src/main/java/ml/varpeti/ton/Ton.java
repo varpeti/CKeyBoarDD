@@ -113,6 +113,26 @@ public class Ton implements Serializable, Cloneable
         }
     }
 
+    public ArrayList<String> getKeyArrayList()
+    {
+        ArrayList<String> ret = new ArrayList<>();
+        for (Ton num: keyvalues.values())
+        {
+            ret.add(num.first());
+        }
+        return ret;
+    }
+
+    public ArrayList<Ton> getValueArrayList()
+    {
+        ArrayList<Ton> ret = new ArrayList<>();
+        for (Ton num: keyvalues.values())
+        {
+            ret.add(num.get(num.first()));
+        }
+        return ret;
+    }
+
     //*/// Statics
 
     static public Ton parsefromFile(String fileName) throws IOException
