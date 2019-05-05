@@ -1635,7 +1635,7 @@ ctrl
 space
     show
         size
-            2
+            2.5
     cmd
         normal
             0

@@ -1,13 +1,17 @@
 package ml.varpeti.ckeyboardd
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Environment
+import android.provider.Settings
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
@@ -25,24 +29,64 @@ class CKBDDsettings : AppCompatActivity()
         checkPermission()
     }
 
+    private val ex = Environment.getExternalStorageDirectory()
+
     private fun start()
     {
-        //TODO a fejlesztés végén csak akkor ha még nem létezik
-        //Kiírom a default keyboardot az SD kártyára
-        File(ex.absolutePath + "/CKeyBoarDD").mkdir()
+        val dir = File("${ex.absolutePath}/CKeyBoarDD")
 
+        // Ha valami hiányzik létrehozza
+        if (!dir.exists()) // If dir not exists
+        {
+            dir.mkdir()
+        }
+        if (!File("${ex.absolutePath}/CKeyBoarDD/b.ton").exists())
+        {
+            copyResources(R.raw.b,"b.ton")
+        }
+        if (!File("${ex.absolutePath}/CKeyBoarDD/r.ton").exists())
+        {
+            copyResources(R.raw.r,"r.ton")
+        }
+        if (!File("${ex.absolutePath}/CKeyBoarDD/k.ton").exists())
+        {
+            copyResources(R.raw.k,"k.ton")
+        }
+    }
+
+    fun onClick(v : View)
+    {
+        when (v.id) //TODO
+        {
+            R.id.settings_keyboards -> {}
+            R.id.settings_rows -> {}
+            R.id.settings_keys -> {}
+            R.id.reset_default_settings -> resetDefaultSettings()
+            R.id.enable_input_method -> startActivity(Intent(Settings.ACTION_INPUT_METHOD_SETTINGS))
+            R.id.set_input_method ->
+            {
+                val ims = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                ims.showInputMethodPicker()
+            }
+        }
+    }
+
+    private fun resetDefaultSettings()
+    {
         copyResources(R.raw.b,"b.ton")
         copyResources(R.raw.r,"r.ton")
         copyResources(R.raw.k,"k.ton")
+        reload()
     }
 
-
-
-    val ex = Environment.getExternalStorageDirectory()
-
-    fun copyResources(resId : Int, filename : String)
+    private fun reload()
     {
-        Log.i("|||", "$resId")
+        //This will tell the IMS it should reload. The IMS checks every onStartInputView.
+        File("${ex.absolutePath}/CKeyBoarDD/ch").createNewFile()
+    }
+
+    private fun copyResources(resId : Int, filename : String)
+    {
         val ins = resources.openRawResource(resId)
 
         val f = File(filename)
@@ -61,9 +105,9 @@ class CKBDDsettings : AppCompatActivity()
                 ins.close()
                 out.close()
             } catch (e: FileNotFoundException) {
-                Log.i("|||", e.message)
+                Log.e("|||", e.message)
             } catch (e: IOException) {
-                Log.i("|||", e.message)
+                Log.e("|||", e.message)
             }
 
         }

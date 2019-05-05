@@ -1,6 +1,7 @@
 package ml.varpeti.ckeyboardd
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.inputmethodservice.InputMethodService
@@ -12,25 +13,30 @@ import android.view.KeyEvent
 import android.view.KeyEvent.ACTION_DOWN
 import android.view.KeyEvent.ACTION_UP
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.widget.LinearLayout
 import android.widget.LinearLayout.HORIZONTAL
 import kotlinx.android.synthetic.main.ckbdd_key.view.*
 import kotlinx.android.synthetic.main.ckbdd_keyboard.view.*
 import ml.varpeti.ton.Ton
+import java.io.File
 import java.text.ParseException
 
 
 class CKBDDservice : InputMethodService()
 {
     private val layouts = HashMap<String,View>()
+    private val ex = Environment.getExternalStorageDirectory()
 
-    //Global Sizes
-    private var buttonsHeight = 100
-    private var buttonsHorizontalMargin = 2
-    private var buttonsVerticalMargin = 2
-    private var buttonsPrimaryTextSize = 25F
-    private var buttonsSecondaryTextSize = 18F
-    //TODO Global colors
+    private var buttonsHeight = 0
+    private var buttonsHorizontalMargin  = 0
+    private var buttonsVerticalMargin = 0
+    private var buttonsPrimaryTextSize = 0F
+    private var buttonsSecondaryTextSize = 0F
+    private var buttonsPrimaryTextColor = 0
+    private var buttonsSecondaryTextColor = 0
+    private var buttonsPrimaryBackgroundColor = 0
+    private var buttonsSecondaryBackgroundColor = 0
 
     private fun checkPermission() : Boolean
     {
@@ -44,6 +50,19 @@ class CKBDDservice : InputMethodService()
 
     }
 
+    override fun onStartInputView(info: EditorInfo?, restarting: Boolean)
+    {
+        super.onStartInputView(info, restarting)
+
+        // If "ch" file is exist, (some changes had happened) delete "ch" and reload everything
+        val ch = File("${ex.absolutePath}/CKeyBoarDD/ch")
+        if (ch.exists())
+        {
+            ch.delete()
+            setInputView(onCreateInputView())
+        }
+    }
+
     override fun onCreateInputView(): View
     {
         if (!checkPermission())
@@ -53,14 +72,24 @@ class CKBDDservice : InputMethodService()
         }
 
         //TODO Ton files error handling
+        //TODO Ton files documentation
 
-        val ex = Environment.getExternalStorageDirectory()
         val bs = Ton.parsefromFile("${ex.absolutePath}/CKeyBoarDD/b.ton") //Buttons
         val rs = Ton.parsefromFile("${ex.absolutePath}/CKeyBoarDD/r.ton") //Rows
         val ks = Ton.parsefromFile("${ex.absolutePath}/CKeyBoarDD/k.ton") //Keyboards
 
         for (kkey in ks.keySet()) // Keyboards
         {
+            buttonsHeight = 100
+            buttonsHorizontalMargin = 2
+            buttonsVerticalMargin = 2
+            buttonsPrimaryTextSize = 25F
+            buttonsSecondaryTextSize = 18F
+            buttonsPrimaryTextColor = Color.parseColor("#ffffff")
+            buttonsSecondaryTextColor = Color.parseColor("#b0b0b0")
+            buttonsPrimaryBackgroundColor = Color.parseColor("#000000")
+            buttonsSecondaryBackgroundColor = Color.parseColor("#404040")
+
             if (ks.get(kkey).containsKey("settings"))
             {
                 val settings = ks.get(kkey).get("settings")
@@ -68,11 +97,15 @@ class CKBDDservice : InputMethodService()
                 {
                     if (!settings.get(key).isEmpty) when (key)
                     {
-                        "buttonsHeight" -> buttonsHeight = settings.get(key).first().toInt()
-                        "buttonsHorizontalMargin" -> buttonsHorizontalMargin = settings.get(key).first().toInt()
-                        "buttonsVerticalMargin" -> buttonsVerticalMargin = settings.get(key).first().toInt()
-                        "buttonsPrimaryTextSize" -> buttonsPrimaryTextSize = settings.get(key).first().toFloat()
-                        "buttonsSecondaryTextSize" -> buttonsSecondaryTextSize = settings.get(key).first().toFloat()
+                        "Height" -> buttonsHeight = settings.get(key).first().toInt()
+                        "HorizontalMargin" -> buttonsHorizontalMargin = settings.get(key).first().toInt()
+                        "VerticalMargin" -> buttonsVerticalMargin = settings.get(key).first().toInt()
+                        "PrimaryTextSize" -> buttonsPrimaryTextSize = settings.get(key).first().toFloat()
+                        "SecondaryTextSize" -> buttonsSecondaryTextSize = settings.get(key).first().toFloat()
+                        "PrimaryTextColor" -> buttonsPrimaryTextColor = Color.parseColor(settings.get(key).first())
+                        "SecondaryTextColor" -> buttonsSecondaryTextColor = Color.parseColor(settings.get(key).first())
+                        "PrimaryBackgroundColor" -> buttonsPrimaryBackgroundColor = Color.parseColor(settings.get(key).first())
+                        "SecondaryBackgroundColor" -> buttonsSecondaryBackgroundColor = Color.parseColor(settings.get(key).first())
                     }
                 }
             }
@@ -83,6 +116,7 @@ class CKBDDservice : InputMethodService()
                     val keyboard = keyboard
                     rows(rs,bs,ks.get(kkey).get("rows").keyArrayList,keyboard)
                 }
+                layout.setBackgroundColor(buttonsSecondaryBackgroundColor)
                 layouts[kkey] = layout
             }
         }
@@ -103,7 +137,16 @@ class CKBDDservice : InputMethodService()
 
             buttons(bs,row.keyArrayList,rowLinearLayout)
 
-            rowLinearLayout.setBackgroundColor(Color.parseColor("#404040"))
+            //Size
+            val layoutparams = LinearLayout.LayoutParams(-1,buttonsHeight)
+
+            //Margin
+            layoutparams.setMargins(0, buttonsHorizontalMargin, 0, buttonsHorizontalMargin)
+
+            //Background color (secondary)
+            rowLinearLayout.setBackgroundColor(buttonsSecondaryBackgroundColor)
+
+            rowLinearLayout.layoutParams = layoutparams
             keyboard.addView(rowLinearLayout)
         }
     }
@@ -152,14 +195,17 @@ class CKBDDservice : InputMethodService()
                     }
                 }
 
-                //TODO colors
-
                 //Size
-                val layoutparams = LinearLayout.LayoutParams(0,buttonsHeight)
+                val layoutparams = LinearLayout.LayoutParams(0,-1)
                 layoutparams.weight=buttonSize
 
                 //Margin
-                layoutparams.setMargins(buttonsVerticalMargin, buttonsHorizontalMargin, buttonsVerticalMargin, buttonsHorizontalMargin)
+                layoutparams.setMargins(buttonsVerticalMargin, 0, buttonsVerticalMargin, 0)
+
+                //Colors
+                key.setBackgroundColor(buttonsPrimaryBackgroundColor)
+                key.primary.setTextColor(buttonsPrimaryTextColor)
+                key.secondary.setTextColor(buttonsSecondaryTextColor)
 
                 key.layoutParams = layoutparams
             }
@@ -194,7 +240,7 @@ class CKBDDservice : InputMethodService()
                     if (ctrl && charArray.size==1) // if only one char and ctrl is down
                     {
                         val keyCode = charArray[0].toInt()
-                        if (keyCode>= 32 && keyCode < 127)
+                        if (keyCode in 32..126)
                         {
                             // https://en.wikipedia.org/wiki/Control_character#How_control_characters_map_to_keyboards
                             currentInputConnection.commitText((keyCode and 31).toChar().toString(), 1)
@@ -220,7 +266,7 @@ class CKBDDservice : InputMethodService()
                     if (ctrl && charArray.size==1)
                     {
                         val keyCode = charArray[0].toInt()
-                        if (keyCode>= 32 && keyCode < 127)
+                        if (keyCode in 32..126)
                         {
                             // https://en.wikipedia.org/wiki/Control_character#How_control_characters_map_to_keyboards
                             currentInputConnection.commitText((keyCode and 31).toChar().toString(), 1)
@@ -274,7 +320,6 @@ class CKBDDservice : InputMethodService()
                         if (layouts.containsKey(kb))
                         {
                             setInputView(layouts[kb])
-                            Log.i("|||","$kb")
                         }
                         else
                         {
@@ -307,11 +352,18 @@ class CKBDDservice : InputMethodService()
                 }
                 "settings" ->
                 {
-                    //TODO
+                    val intent = Intent(this,CKBDDsettings::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                    startActivity(intent)
                 }
                 "voice" ->
                 {
-                    //TODO
+                    /* TODO
+                    private static final int RECOGNIZER_REQ_CODE = 1234;
+
+                    Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+                    startActivityForResult(intent, RECOGNIZER_REQ_CODE);
+                    */
                 }
             }
         }
