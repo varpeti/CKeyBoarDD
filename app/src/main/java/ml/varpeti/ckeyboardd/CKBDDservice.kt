@@ -65,8 +65,15 @@ class CKBDDservice : InputMethodService()
         //TODO Ton files error handling
         //TODO Ton files documentation
 
-        val bs = Ton.parsefromFile("${ex.absolutePath}/CKeyBoarDD/b.ton") //Buttons
-        val rs = Ton.parsefromFile("${ex.absolutePath}/CKeyBoarDD/r.ton") //Rows
+        keyboards(layouts)
+
+        if (!layouts.containsKey("main")) throw Exception("The 'main' keyboard not found")
+
+        return layouts["main"]!!
+    }
+
+    fun keyboards(layouts : HashMap<String,View>)
+    {
         val ks = Ton.parsefromFile("${ex.absolutePath}/CKeyBoarDD/k.ton") //Keyboards
 
         for (kkey in ks.keySet()) // Keyboards
@@ -82,20 +89,17 @@ class CKBDDservice : InputMethodService()
             {
                 val layout = layoutInflater.inflate(R.layout.ckbdd_keyboard, null).apply{
                     val keyboard = keyboard
-                    rows(rs,bs,ks.get(kkey).get("rows").keyArrayList,keyboard)
+                    rows(ks.get(kkey).get("rows").keyArrayList,keyboard)
                 }
                 layout.setBackgroundColor(buttonsSettings.secondaryBackgroundColor.get())
                 layouts[kkey] = layout
             }
         }
-
-        if (!layouts.containsKey("main")) throw Exception("The 'main' keyboard not found")
-
-        return layouts["main"]!!
     }
 
-    private fun rows(rs : Ton, bs : Ton, rowkeys : ArrayList<String>, keyboard: LinearLayout)
+    fun rows(rowkeys : ArrayList<String>, keyboard: LinearLayout)
     {
+        val rs = Ton.parsefromFile("${ex.absolutePath}/CKeyBoarDD/r.ton") //Rows
         for (rkey in rowkeys)
         {
             val rowLinearLayout = LinearLayout(this@CKBDDservice)
@@ -112,7 +116,7 @@ class CKBDDservice : InputMethodService()
 
             if (row.containsKey("buttons"))
             {
-                buttons(bs,row.get("buttons").keyArrayList,rowLinearLayout)
+                buttons(row.get("buttons").keyArrayList,rowLinearLayout)
             }
 
             //Size
@@ -125,16 +129,14 @@ class CKBDDservice : InputMethodService()
             rowLinearLayout.setBackgroundColor(buttonsSettings.secondaryBackgroundColor.get())
 
             rowLinearLayout.layoutParams = layoutparams
-
-
-
             keyboard.addView(rowLinearLayout)
         }
     }
 
 
-    private fun buttons(bs : Ton, buttonskeys : ArrayList<String>, rowLinearLayout : LinearLayout)
+    fun buttons(buttonskeys : ArrayList<String>, rowLinearLayout : LinearLayout)
     {
+        val bs = Ton.parsefromFile("${ex.absolutePath}/CKeyBoarDD/b.ton") //Buttons
         for (bkey in buttonskeys) if (bs.containsKey(bkey))
         {
             val b = bs.get(bkey) //button

@@ -1,4 +1,11 @@
 <resources>
     <string name="app_name">CKeyBoarDD</string>
     <string name="testbox">TestBox</string>
+    <string name="rows">rows</string>
+    <string name="keyboards">keyboards</string>
+    <string name="keys">keys</string>
+    <string name="settings">Settings</string>
+    <string name="set_input_method">Set Input Method</string>
+    <string name="enable_input_method">Enable Input Method</string>
+    <string name="reset_default_settings">reset default settings</string>
 </resources>
