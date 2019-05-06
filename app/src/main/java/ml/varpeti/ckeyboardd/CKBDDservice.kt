@@ -72,10 +72,11 @@ class CKBDDservice : InputMethodService()
         return layouts["main"]!!
     }
 
+    //TODO KRS parsereket kiszedni innen
+
+    val ks = Ton.parsefromFile("${ex.absolutePath}/CKeyBoarDD/k.ton") //Keyboards
     fun keyboards(layouts : HashMap<String,View>)
     {
-        val ks = Ton.parsefromFile("${ex.absolutePath}/CKeyBoarDD/k.ton") //Keyboards
-
         for (kkey in ks.keySet()) // Keyboards
         {
             buttonsSettings.reset(LVL_K)
@@ -97,9 +98,9 @@ class CKBDDservice : InputMethodService()
         }
     }
 
+    val rs = Ton.parsefromFile("${ex.absolutePath}/CKeyBoarDD/r.ton") //Rows
     fun rows(rowkeys : ArrayList<String>, keyboard: LinearLayout)
     {
-        val rs = Ton.parsefromFile("${ex.absolutePath}/CKeyBoarDD/r.ton") //Rows
         for (rkey in rowkeys)
         {
             val rowLinearLayout = LinearLayout(this@CKBDDservice)
@@ -133,10 +134,9 @@ class CKBDDservice : InputMethodService()
         }
     }
 
-
+    val bs = Ton.parsefromFile("${ex.absolutePath}/CKeyBoarDD/b.ton") //Buttons
     fun buttons(buttonskeys : ArrayList<String>, rowLinearLayout : LinearLayout)
     {
-        val bs = Ton.parsefromFile("${ex.absolutePath}/CKeyBoarDD/b.ton") //Buttons
         for (bkey in buttonskeys) if (bs.containsKey(bkey))
         {
             val b = bs.get(bkey) //button
