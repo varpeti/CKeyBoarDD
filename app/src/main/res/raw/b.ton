@@ -1621,6 +1621,9 @@ shiftout
                 switch
                     caps
 ctrl
+    settings
+        PrimaryTextSize
+            20
     show
         primary
                 ctrl
@@ -1633,8 +1636,8 @@ ctrl
                 switch
                     smiley
 space
-    show
-        size
+    settings
+        Width
             2.5
     cmd
         normal

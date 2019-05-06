@@ -27,16 +27,7 @@ class CKBDDservice : InputMethodService()
 {
     private val layouts = HashMap<String,View>()
     private val ex = Environment.getExternalStorageDirectory()
-
-    private var buttonsHeight = 0
-    private var buttonsHorizontalMargin  = 0
-    private var buttonsVerticalMargin = 0
-    private var buttonsPrimaryTextSize = 0F
-    private var buttonsSecondaryTextSize = 0F
-    private var buttonsPrimaryTextColor = 0
-    private var buttonsSecondaryTextColor = 0
-    private var buttonsPrimaryBackgroundColor = 0
-    private var buttonsSecondaryBackgroundColor = 0
+    private val buttonsSettings = CKBDDbuttonsSettings()
 
     private fun checkPermission() : Boolean
     {
@@ -80,34 +71,11 @@ class CKBDDservice : InputMethodService()
 
         for (kkey in ks.keySet()) // Keyboards
         {
-            buttonsHeight = 100
-            buttonsHorizontalMargin = 2
-            buttonsVerticalMargin = 2
-            buttonsPrimaryTextSize = 25F
-            buttonsSecondaryTextSize = 18F
-            buttonsPrimaryTextColor = Color.parseColor("#ffffff")
-            buttonsSecondaryTextColor = Color.parseColor("#b0b0b0")
-            buttonsPrimaryBackgroundColor = Color.parseColor("#000000")
-            buttonsSecondaryBackgroundColor = Color.parseColor("#404040")
-
+            buttonsSettings.reset(LVL_K)
             if (ks.get(kkey).containsKey("settings"))
             {
                 val settings = ks.get(kkey).get("settings")
-                for (key in settings.keySet())
-                {
-                    if (!settings.get(key).isEmpty) when (key)
-                    {
-                        "Height" -> buttonsHeight = settings.get(key).first().toInt()
-                        "HorizontalMargin" -> buttonsHorizontalMargin = settings.get(key).first().toInt()
-                        "VerticalMargin" -> buttonsVerticalMargin = settings.get(key).first().toInt()
-                        "PrimaryTextSize" -> buttonsPrimaryTextSize = settings.get(key).first().toFloat()
-                        "SecondaryTextSize" -> buttonsSecondaryTextSize = settings.get(key).first().toFloat()
-                        "PrimaryTextColor" -> buttonsPrimaryTextColor = Color.parseColor(settings.get(key).first())
-                        "SecondaryTextColor" -> buttonsSecondaryTextColor = Color.parseColor(settings.get(key).first())
-                        "PrimaryBackgroundColor" -> buttonsPrimaryBackgroundColor = Color.parseColor(settings.get(key).first())
-                        "SecondaryBackgroundColor" -> buttonsSecondaryBackgroundColor = Color.parseColor(settings.get(key).first())
-                    }
-                }
+                buttonsSettings.change(settings,LVL_K)
             }
 
             if (ks.get(kkey).containsKey("rows"))
@@ -116,7 +84,7 @@ class CKBDDservice : InputMethodService()
                     val keyboard = keyboard
                     rows(rs,bs,ks.get(kkey).get("rows").keyArrayList,keyboard)
                 }
-                layout.setBackgroundColor(buttonsSecondaryBackgroundColor)
+                layout.setBackgroundColor(buttonsSettings.secondaryBackgroundColor.get())
                 layouts[kkey] = layout
             }
         }
@@ -135,18 +103,31 @@ class CKBDDservice : InputMethodService()
 
             val row = rs.get(rkey)
 
-            buttons(bs,row.keyArrayList,rowLinearLayout)
+            buttonsSettings.reset(LVL_R)
+            if (row.containsKey("settings"))
+            {
+                val settings = row.get("settings")
+                buttonsSettings.change(settings,LVL_R)
+            }
+
+            if (row.containsKey("buttons"))
+            {
+                buttons(bs,row.get("buttons").keyArrayList,rowLinearLayout)
+            }
 
             //Size
-            val layoutparams = LinearLayout.LayoutParams(-1,buttonsHeight)
+            val layoutparams = LinearLayout.LayoutParams(-1,buttonsSettings.height.get())
 
             //Margin
-            layoutparams.setMargins(0, buttonsHorizontalMargin, 0, buttonsHorizontalMargin)
+            layoutparams.setMargins(0, buttonsSettings.horizontalMargin.get(), 0, buttonsSettings.horizontalMargin.get())
 
             //Background color (secondary)
-            rowLinearLayout.setBackgroundColor(buttonsSecondaryBackgroundColor)
+            rowLinearLayout.setBackgroundColor(buttonsSettings.secondaryBackgroundColor.get())
 
             rowLinearLayout.layoutParams = layoutparams
+
+
+
             keyboard.addView(rowLinearLayout)
         }
     }
@@ -159,7 +140,13 @@ class CKBDDservice : InputMethodService()
             val b = bs.get(bkey) //button
 
             val key = layoutInflater.inflate(R.layout.ckbdd_key, null).apply {
-                var buttonSize = 1F
+
+                buttonsSettings.reset(LVL_B)
+                if (b.containsKey("settings"))
+                {
+                    val settings = b.get("settings")
+                    buttonsSettings.change(settings,LVL_B)
+                }
 
                 //Show
                 if (b.containsKey("show"))
@@ -168,16 +155,12 @@ class CKBDDservice : InputMethodService()
                     if (show.containsKey("primary") && !show.get("primary").isEmpty)
                     {
                         primary.text = b.get("show").get("primary").first()
-                        primary.textSize=buttonsPrimaryTextSize
+                        primary.textSize=buttonsSettings.primaryTextSize.get()
                     }
                     if (show.containsKey("secondary") && !show.get("secondary").isEmpty)
                     {
                         secondary.text = b.get("show").get("secondary").first()
-                        secondary.textSize=buttonsSecondaryTextSize
-                    }
-                    if (show.containsKey("size")  && !show.get("size").isEmpty)
-                    {
-                        buttonSize = (show.get("size").first()).toFloat()
+                        secondary.textSize=buttonsSettings.secondaryTextSize.get()
                     }
                 }
 
@@ -197,15 +180,15 @@ class CKBDDservice : InputMethodService()
 
                 //Size
                 val layoutparams = LinearLayout.LayoutParams(0,-1)
-                layoutparams.weight=buttonSize
+                layoutparams.weight=buttonsSettings.width.get()
 
                 //Margin
-                layoutparams.setMargins(buttonsVerticalMargin, 0, buttonsVerticalMargin, 0)
+                layoutparams.setMargins(buttonsSettings.verticalMargin.get(), 0, buttonsSettings.verticalMargin.get(), 0)
 
                 //Colors
-                key.setBackgroundColor(buttonsPrimaryBackgroundColor)
-                key.primary.setTextColor(buttonsPrimaryTextColor)
-                key.secondary.setTextColor(buttonsSecondaryTextColor)
+                key.setBackgroundColor(buttonsSettings.primaryBackgroundColor.get())
+                key.primary.setTextColor(buttonsSettings.primaryTextColor.get())
+                key.secondary.setTextColor(buttonsSettings.secondaryTextColor.get())
 
                 key.layoutParams = layoutparams
             }

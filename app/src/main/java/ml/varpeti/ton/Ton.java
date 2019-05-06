@@ -27,7 +27,7 @@ import java.util.regex.Pattern;
 
 public class Ton implements Serializable, Cloneable
 {
-    HashMap<String,Ton> keyvalues;
+    private HashMap<String,Ton> keyvalues;
 
     //*/// Constructors
 
@@ -116,9 +116,12 @@ public class Ton implements Serializable, Cloneable
     public ArrayList<String> getKeyArrayList()
     {
         ArrayList<String> ret = new ArrayList<>();
-        for (Ton num: keyvalues.values())
+        int i = 0;
+        while (keyvalues.containsKey(""+i))
         {
-            ret.add(num.first());
+            Ton num = keyvalues.get(""+i);
+            if (!num.isEmpty()) ret.add(num.first());
+            i++;
         }
         return ret;
     }
@@ -126,9 +129,12 @@ public class Ton implements Serializable, Cloneable
     public ArrayList<Ton> getValueArrayList()
     {
         ArrayList<Ton> ret = new ArrayList<>();
-        for (Ton num: keyvalues.values())
+        int i = 0;
+        while (keyvalues.containsKey(""+i))
         {
-            ret.add(num.get(num.first()));
+            Ton num = keyvalues.get(""+i);
+            if (!num.isEmpty()) ret.add(num.get(num.first()));
+            i++;
         }
         return ret;
     }
