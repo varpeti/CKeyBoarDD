@@ -27,6 +27,10 @@
                        android:resource="@xml/method" />
         </service>
 
+        <activity android:name=".CKBDDsetbuttons"/>
+        <activity android:name=".CKBDDsetrows"/>
+        <activity android:name=".CKBDDsetkeyboards"/>
+
     </application>
 
 </manifest>

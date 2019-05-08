@@ -3,7 +3,6 @@ package ml.varpeti.ckeyboardd
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Color
 import android.inputmethodservice.InputMethodService
 import android.os.Environment
 import android.support.v4.content.ContextCompat
@@ -26,8 +25,11 @@ import java.text.ParseException
 class CKBDDservice : InputMethodService()
 {
     private val layouts = HashMap<String,View>()
-    private val ex = Environment.getExternalStorageDirectory()
+    private val ex = "${Environment.getExternalStorageDirectory().absolutePath}/CKeyBoarDD"
     private val buttonsSettings = CKBDDbuttonsSettings()
+    private lateinit var ks : Ton
+    private lateinit var rs : Ton
+    private lateinit var bs : Ton
 
     private fun checkPermission() : Boolean
     {
@@ -46,7 +48,7 @@ class CKBDDservice : InputMethodService()
         super.onStartInputView(info, restarting)
 
         // If "ch" file is exist, (some changes had happened) delete "ch" and reload everything
-        val ch = File("${ex.absolutePath}/CKeyBoarDD/ch")
+        val ch = File("$ex/ch")
         if (ch.exists())
         {
             ch.delete()
@@ -62,19 +64,19 @@ class CKBDDservice : InputMethodService()
             return View(this)
         }
 
-        //TODO Ton files error handling
+        //TODO more/better Ton files error handling
         //TODO Ton files documentation
 
+        ks = Ton.parsefromFile("$ex/k.ton") //Keyboards
+        rs = Ton.parsefromFile("$ex/r.ton") //Rows
+        bs = Ton.parsefromFile("$ex/b.ton") //Buttons
         keyboards(layouts)
 
-        if (!layouts.containsKey("main")) throw Exception("The 'main' keyboard not found")
+        if (!layouts.containsKey("main")) return layouts.values.first()
 
         return layouts["main"]!!
     }
 
-    //TODO KRS parsereket kiszedni innen
-
-    val ks = Ton.parsefromFile("${ex.absolutePath}/CKeyBoarDD/k.ton") //Keyboards
     fun keyboards(layouts : HashMap<String,View>)
     {
         for (kkey in ks.keySet()) // Keyboards
@@ -98,7 +100,6 @@ class CKBDDservice : InputMethodService()
         }
     }
 
-    val rs = Ton.parsefromFile("${ex.absolutePath}/CKeyBoarDD/r.ton") //Rows
     fun rows(rowkeys : ArrayList<String>, keyboard: LinearLayout)
     {
         for (rkey in rowkeys)
@@ -134,7 +135,6 @@ class CKBDDservice : InputMethodService()
         }
     }
 
-    val bs = Ton.parsefromFile("${ex.absolutePath}/CKeyBoarDD/b.ton") //Buttons
     fun buttons(buttonskeys : ArrayList<String>, rowLinearLayout : LinearLayout)
     {
         for (bkey in buttonskeys) if (bs.containsKey(bkey))

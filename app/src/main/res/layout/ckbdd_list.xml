@@ -10,6 +10,6 @@
             android:layout_marginStart="8dp" android:layout_marginEnd="8dp" app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="8dp">
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                      android:orientation="vertical" android:id="@+id/ll"/>
+                      android:orientation="vertical" android:id="@+id/list"/>
     </ScrollView>
 </android.support.constraint.ConstraintLayout>

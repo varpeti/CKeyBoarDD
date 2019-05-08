@@ -29,26 +29,26 @@ class CKBDDsettings : AppCompatActivity()
         checkPermission()
     }
 
-    private val ex = Environment.getExternalStorageDirectory()
+    private val ex = "${Environment.getExternalStorageDirectory().absolutePath}/CKeyBoarDD"
 
     private fun start()
     {
-        val dir = File("${ex.absolutePath}/CKeyBoarDD")
+        val dir = File("$ex")
 
         // Ha valami hiányzik létrehozza
         if (!dir.exists()) // If dir not exists
         {
             dir.mkdir()
         }
-        if (!File("${ex.absolutePath}/CKeyBoarDD/b.ton").exists())
+        if (!File("$ex/b.ton").exists())
         {
             copyResources(R.raw.b,"b.ton")
         }
-        if (!File("${ex.absolutePath}/CKeyBoarDD/r.ton").exists())
+        if (!File("$ex/r.ton").exists())
         {
             copyResources(R.raw.r,"r.ton")
         }
-        if (!File("${ex.absolutePath}/CKeyBoarDD/k.ton").exists())
+        if (!File("$ex/k.ton").exists())
         {
             copyResources(R.raw.k,"k.ton")
         }
@@ -58,9 +58,9 @@ class CKBDDsettings : AppCompatActivity()
     {
         when (v.id) //TODO
         {
-            R.id.settings_keyboards -> {}
-            R.id.settings_rows -> {}
-            R.id.settings_keys -> {}
+            R.id.settings_keyboards -> startActivity(Intent(this,CKBDDsetkeyboards::class.java))
+            R.id.settings_rows -> startActivity(Intent(this,CKBDDsetrows::class.java))
+            R.id.settings_keys -> startActivity(Intent(this,CKBDDsetbuttons::class.java))
             R.id.reset_default_settings -> resetDefaultSettings()
             R.id.enable_input_method -> startActivity(Intent(Settings.ACTION_INPUT_METHOD_SETTINGS))
             R.id.set_input_method ->
@@ -82,7 +82,7 @@ class CKBDDsettings : AppCompatActivity()
     private fun reload()
     {
         //This will tell the IMS it should reload. The IMS checks every onStartInputView.
-        File("${ex.absolutePath}/CKeyBoarDD/ch").createNewFile()
+        File("$ex/ch").createNewFile()
     }
 
     private fun copyResources(resId : Int, filename : String)
@@ -93,7 +93,7 @@ class CKBDDsettings : AppCompatActivity()
 
         if (!f.exists()) {
             try {
-                val out = FileOutputStream(File("${ex.absolutePath}/CKeyBoarDD", filename))
+                val out = FileOutputStream(File("$ex", filename))
                 val buffer = ByteArray(1024)
                 var len: Int
                 while (true)
