@@ -13,10 +13,6 @@ import android.view.KeyEvent.ACTION_DOWN
 import android.view.KeyEvent.ACTION_UP
 import android.view.View
 import android.view.inputmethod.EditorInfo
-import android.widget.LinearLayout
-import android.widget.LinearLayout.HORIZONTAL
-import kotlinx.android.synthetic.main.ckbdd_key.view.*
-import kotlinx.android.synthetic.main.ckbdd_keyboard.view.*
 import ml.varpeti.ton.Ton
 import java.io.File
 import java.text.ParseException
@@ -26,10 +22,6 @@ class CKBDDservice : InputMethodService()
 {
     private val layouts = HashMap<String,View>()
     private val ex = "${Environment.getExternalStorageDirectory().absolutePath}/CKeyBoarDD"
-    private val buttonsSettings = CKBDDbuttonsSettings()
-    private lateinit var ks : Ton
-    private lateinit var rs : Ton
-    private lateinit var bs : Ton
 
     private fun checkPermission() : Boolean
     {
@@ -64,139 +56,12 @@ class CKBDDservice : InputMethodService()
             return View(this)
         }
 
-        //TODO more/better Ton files error handling
-        //TODO Ton files documentation
-
-        ks = Ton.parsefromFile("$ex/k.ton") //Keyboards
-        rs = Ton.parsefromFile("$ex/r.ton") //Rows
-        bs = Ton.parsefromFile("$ex/b.ton") //Buttons
-        keyboards(layouts)
+        val ton2view = CKBDDton2view()
+        ton2view.keyboards(this,layouts,::onClick)
 
         if (!layouts.containsKey("main")) return layouts.values.first()
 
         return layouts["main"]!!
-    }
-
-    fun keyboards(layouts : HashMap<String,View>)
-    {
-        for (kkey in ks.keySet()) // Keyboards
-        {
-            buttonsSettings.reset(LVL_K)
-            if (ks.get(kkey).containsKey("settings"))
-            {
-                val settings = ks.get(kkey).get("settings")
-                buttonsSettings.change(settings,LVL_K)
-            }
-
-            if (ks.get(kkey).containsKey("rows"))
-            {
-                val layout = layoutInflater.inflate(R.layout.ckbdd_keyboard, null).apply{
-                    val keyboard = keyboard
-                    rows(ks.get(kkey).get("rows").keyArrayList,keyboard)
-                }
-                layout.setBackgroundColor(buttonsSettings.secondaryBackgroundColor.get())
-                layouts[kkey] = layout
-            }
-        }
-    }
-
-    fun rows(rowkeys : ArrayList<String>, keyboard: LinearLayout)
-    {
-        for (rkey in rowkeys)
-        {
-            val rowLinearLayout = LinearLayout(this@CKBDDservice)
-            rowLinearLayout.orientation = HORIZONTAL
-
-            val row = rs.get(rkey)
-
-            buttonsSettings.reset(LVL_R)
-            if (row.containsKey("settings"))
-            {
-                val settings = row.get("settings")
-                buttonsSettings.change(settings,LVL_R)
-            }
-
-            if (row.containsKey("buttons"))
-            {
-                buttons(row.get("buttons").keyArrayList,rowLinearLayout)
-            }
-
-            //Size
-            val layoutparams = LinearLayout.LayoutParams(-1,buttonsSettings.height.get())
-
-            //Margin
-            layoutparams.setMargins(0, buttonsSettings.horizontalMargin.get(), 0, buttonsSettings.horizontalMargin.get())
-
-            //Background color (secondary)
-            rowLinearLayout.setBackgroundColor(buttonsSettings.secondaryBackgroundColor.get())
-
-            rowLinearLayout.layoutParams = layoutparams
-            keyboard.addView(rowLinearLayout)
-        }
-    }
-
-    fun buttons(buttonskeys : ArrayList<String>, rowLinearLayout : LinearLayout)
-    {
-        for (bkey in buttonskeys) if (bs.containsKey(bkey))
-        {
-            val b = bs.get(bkey) //button
-
-            val key = layoutInflater.inflate(R.layout.ckbdd_key, null).apply {
-
-                buttonsSettings.reset(LVL_B)
-                if (b.containsKey("settings"))
-                {
-                    val settings = b.get("settings")
-                    buttonsSettings.change(settings,LVL_B)
-                }
-
-                //Show
-                if (b.containsKey("show"))
-                {
-                    val show = b.get("show")
-                    if (show.containsKey("primary") && !show.get("primary").isEmpty)
-                    {
-                        primary.text = b.get("show").get("primary").first()
-                        primary.textSize=buttonsSettings.primaryTextSize.get()
-                    }
-                    if (show.containsKey("secondary") && !show.get("secondary").isEmpty)
-                    {
-                        secondary.text = b.get("show").get("secondary").first()
-                        secondary.textSize=buttonsSettings.secondaryTextSize.get()
-                    }
-                }
-
-                //Onclick
-                if (b.containsKey("cmd"))
-                {
-                    val cmd = b.get("cmd")
-                    if (cmd.containsKey("normal") && !cmd.get("normal").isEmpty)
-                    {
-                        key.setOnClickListener { onClick(cmd.get("normal")) }
-                    }
-                    if (cmd.containsKey("long") && !cmd.get("long").isEmpty)
-                    {
-                        key.setOnLongClickListener { onClick(cmd.get("long")) }
-                    }
-                }
-
-                //Size
-                val layoutparams = LinearLayout.LayoutParams(0,-1)
-                layoutparams.weight=buttonsSettings.width.get()
-
-                //Margin
-                layoutparams.setMargins(buttonsSettings.verticalMargin.get(), 0, buttonsSettings.verticalMargin.get(), 0)
-
-                //Colors
-                key.setBackgroundColor(buttonsSettings.primaryBackgroundColor.get())
-                key.primary.setTextColor(buttonsSettings.primaryTextColor.get())
-                key.secondary.setTextColor(buttonsSettings.secondaryTextColor.get())
-
-                key.layoutParams = layoutparams
-            }
-
-            rowLinearLayout.addView(key)
-        }
     }
 
     /*
