@@ -43,16 +43,18 @@ class CKBDDbuttonsSettings
         }
     }
 
-     var height = Tway(100)
-     var width = Tway(1F)
-     var horizontalMargin  = Tway(2)
-     var verticalMargin = Tway(2)
-     var primaryTextSize = Tway(25F)
-     var secondaryTextSize = Tway(18F)
-     var primaryTextColor = Tway(Color.parseColor("#ffffff"))
-     var secondaryTextColor = Tway(Color.parseColor("#b0b0b0"))
-     var primaryBackgroundColor = Tway(Color.parseColor("#000000"))
-     var secondaryBackgroundColor = Tway(Color.parseColor("#404040"))
+    var height = Tway(100)
+    var width = Tway(1F)
+    var horizontalMargin  = Tway(2)
+    var verticalMargin = Tway(2)
+    var primaryTextSize = Tway(25F)
+    var secondaryTextSize = Tway(18F)
+    var primaryTextColor = Tway(Color.parseColor("#ffffff"))
+    var secondaryTextColor = Tway(Color.parseColor("#b0b0b0"))
+    var primaryBackgroundColor = Tway(Color.parseColor("#000000"))
+    var secondaryBackgroundColor = Tway(Color.parseColor("#404040"))
+    var repeatInitialInterval = Tway(400)
+    var repeatInterval = Tway(100)
 
     fun change(settings : Ton,lvl : Int)
     {
@@ -70,6 +72,8 @@ class CKBDDbuttonsSettings
                 "SecondaryTextColor"        -> secondaryTextColor.set(Color.parseColor(settings.get(key).first()),lvl)
                 "PrimaryBackgroundColor"    -> primaryBackgroundColor.set(Color.parseColor(settings.get(key).first()),lvl)
                 "SecondaryBackgroundColor"  -> secondaryBackgroundColor.set(Color.parseColor(settings.get(key).first()),lvl)
+                "repeatInitialInterval"     -> repeatInitialInterval.set(settings.get(key).first().toInt(),lvl)
+                "repeatInterval"            -> repeatInterval.set(settings.get(key).first().toInt(),lvl)
             }
         }
     }
@@ -86,5 +90,7 @@ class CKBDDbuttonsSettings
         secondaryTextColor.reset(lvl)
         primaryBackgroundColor.reset(lvl)
         secondaryBackgroundColor.reset(lvl)
+        repeatInitialInterval.reset(lvl)
+        repeatInterval.reset(lvl)
     }
 }

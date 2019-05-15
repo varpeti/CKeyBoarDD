@@ -131,6 +131,10 @@ class CKBDDton2view
                     {
                         key.setOnLongClickListener { onClick(cmd.get("long")) }
                     }
+                    else // If no Long Click is defined then repeat the key
+                    {
+                        key.setOnTouchListener(CKBDDrepeatListener(buttonsSettings.repeatInitialInterval.get(), buttonsSettings.repeatInterval.get(), { onClick(cmd.get("normal")) } ))
+                    }
                 }
 
                 //Size

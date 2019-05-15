@@ -1648,7 +1648,7 @@ space
             0
                 keycode
                     61
-backspace
+backspace2
     show
         primary
             ⟵
@@ -1661,6 +1661,15 @@ backspace
             0
                 delete
                     word
+backspace
+    show
+        primary
+            ⟵
+    cmd
+        normal
+            0
+                keycode
+                    67
 return
     show
         primary
