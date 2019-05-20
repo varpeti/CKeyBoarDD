@@ -1,17 +1,14 @@
 package ml.varpeti.ckeyboardd
 
+import android.content.Intent
 import android.os.Bundle
-import android.os.Environment
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
+import android.widget.Button
 import android.widget.LinearLayout
-import android.widget.LinearLayout.HORIZONTAL
-import kotlinx.android.synthetic.main.ckbdd_key.view.*
-import kotlinx.android.synthetic.main.ckbdd_keyboard.view.*
 import kotlinx.android.synthetic.main.ckbdd_list.*
 import ml.varpeti.ton.Ton
-import java.lang.Math.round
 
 class CKBDDsetkeyboards : AppCompatActivity()
 {
@@ -24,21 +21,28 @@ class CKBDDsetkeyboards : AppCompatActivity()
         val ton2view = CKBDDton2view()
 
         val layouts = HashMap<String,View>()
-        ton2view.keyboards(this,layouts,::onClick)
+        ton2view.keyboards(this,layouts) {true}
 
         val layoutparams = LinearLayout.LayoutParams(-1,-2)
         layoutparams.setMargins(0,ton2view.buttonsSettings.horizontalMargin.get(),0,ton2view.buttonsSettings.horizontalMargin.get())
 
-        for (view in layouts.values)
+        for (keyboardID in layouts.keys)
         {
-            view.layoutParams = layoutparams
+            val keyboardButton = Button(this)
+            keyboardButton.text=keyboardID
+            keyboardButton.setOnClickListener { onClick(keyboardID) }
+            list.addView(keyboardButton)
+
+            val view = layouts[keyboardID]
+            view!!.layoutParams = layoutparams
             list.addView(view)
         }
     }
 
-    private fun onClick(cmd : Ton) : Boolean
+    private fun onClick(id : String)
     {
-        Log.i("|||","$cmd")
-        return true
+        val intent = Intent(this,CKBDDsetkeyboard::class.java)
+        intent.putExtra("id",id)
+        startActivity(intent)
     }
 }

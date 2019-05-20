@@ -33,10 +33,10 @@ class CKBDDsettings : AppCompatActivity()
 
     private fun start()
     {
-        val dir = File("$ex")
+        val dir = File(ex)
 
-        // Ha valami hiányzik létrehozza
-        if (!dir.exists()) // If dir not exists
+        // If smt is missing it will (re)create
+        if (!dir.exists())
         {
             dir.mkdir()
         }
@@ -91,9 +91,11 @@ class CKBDDsettings : AppCompatActivity()
 
         val f = File(filename)
 
-        if (!f.exists()) {
-            try {
-                val out = FileOutputStream(File("$ex", filename))
+        if (!f.exists())
+        {
+            try
+            {
+                val out = FileOutputStream(File(ex, filename))
                 val buffer = ByteArray(1024)
                 var len: Int
                 while (true)

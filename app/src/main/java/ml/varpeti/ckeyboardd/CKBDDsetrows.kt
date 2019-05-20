@@ -1,15 +1,10 @@
 package ml.varpeti.ckeyboardd
 
+import android.content.Intent
 import android.os.Bundle
-import android.os.Environment
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
-import android.widget.LinearLayout
-import android.widget.LinearLayout.HORIZONTAL
-import kotlinx.android.synthetic.main.ckbdd_key.view.*
+import android.widget.Button
 import kotlinx.android.synthetic.main.ckbdd_list.*
-import ml.varpeti.ton.Ton
-import java.lang.Math.round
 
 class CKBDDsetrows : AppCompatActivity()
 {
@@ -22,13 +17,25 @@ class CKBDDsetrows : AppCompatActivity()
         val ton2view = CKBDDton2view()
 
         val arrayList = ArrayList(ton2view.rs.keySet())
-        ton2view.rows(this,arrayList,list,::onClick)
+        ton2view.rows(this,arrayList,list) {true}
+
+        val max = list.childCount
+
+        for (i in 0 until max)
+        {
+            val rowID = arrayList[i]
+            val rowButton = Button(this)
+            rowButton.text=rowID
+            rowButton.setOnClickListener { onClick(rowID) }
+            list.addView(rowButton,i*2)
+        }
     }
 
-    private fun onClick(cmd : Ton) : Boolean
+    private fun onClick(id : String)
     {
-        Log.i("|||","$cmd")
-        return true
+        val intent = Intent(this,CKBDDsetrow::class.java)
+        intent.putExtra("id",id)
+        startActivity(intent)
     }
 
 }

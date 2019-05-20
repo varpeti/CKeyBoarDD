@@ -52,7 +52,13 @@ class CKBDDservice : InputMethodService()
     {
         if (!checkPermission())
         {
-            Log.e("|||","Missing external storage permission!") //TODO
+            Log.e("|||","Missing external storage permission!")
+
+            //In case of missing external storage permission, open the settings, it'll ask 4 it
+            val intent = Intent(this,CKBDDsettings::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            startActivity(intent)
+
             return View(this)
         }
 

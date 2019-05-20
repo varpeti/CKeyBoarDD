@@ -5,8 +5,7 @@ import android.os.Environment
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
-import kotlinx.android.synthetic.main.ckbdd_key.view.*
-import kotlinx.android.synthetic.main.ckbdd_keyboard.view.*
+import kotlinx.android.synthetic.main.ckbdd_button.view.*
 import ml.varpeti.ton.Ton
 
 //TODO more/better Ton files error handling
@@ -28,7 +27,7 @@ class CKBDDton2view
         bs = Ton.parsefromFile("$ex/b.ton") //Buttons
     }
 
-    fun keyboards(context : Context, layouts : HashMap<String, View>, onClick : (ton : Ton) -> Boolean)
+    fun keyboards(context : Context, layouts : HashMap<String, View>, onClick : (cmd : Ton) -> Boolean)
     {
         for (kkey in ks.keySet()) // Keyboards
         {
@@ -41,18 +40,16 @@ class CKBDDton2view
 
             if (ks.get(kkey).containsKey("rows"))
             {
-                val mInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-                val layout = mInflater.inflate(R.layout.ckbdd_keyboard, null).apply{
-                    val keyboard = keyboard
-                    rows(context, ks.get(kkey).get("rows").keyArrayList,keyboard,onClick)
-                }
-                layout.setBackgroundColor(buttonsSettings.secondaryBackgroundColor.get())
-                layouts[kkey] = layout
+                val keyboardLinearLayout = LinearLayout(context)
+                keyboardLinearLayout.orientation = LinearLayout.VERTICAL
+                rows(context, ks.get(kkey).get("rows").keyArrayList,keyboardLinearLayout,onClick)
+                keyboardLinearLayout.setBackgroundColor(buttonsSettings.secondaryBackgroundColor.get())
+                layouts[kkey] = keyboardLinearLayout
             }
         }
     }
 
-    fun rows(context : Context, rowkeys : ArrayList<String>, keyboard: LinearLayout, onClick : (ton : Ton) -> Boolean)
+    fun rows(context : Context, rowkeys : ArrayList<String>, keyboard: LinearLayout, onClick : (cmd : Ton) -> Boolean)
     {
         for (rkey in rowkeys)if (rs.containsKey(rkey))
         {
@@ -87,14 +84,14 @@ class CKBDDton2view
         }
     }
 
-    fun buttons(context : Context, buttonskeys : ArrayList<String>, rowLinearLayout : LinearLayout, onClick : (ton : Ton) -> Boolean)
+    fun buttons(context : Context, buttonskeys : ArrayList<String>, rowLinearLayout : LinearLayout, onClick : (cmd : Ton) -> Boolean)
     {
         for (bkey in buttonskeys) if (bs.containsKey(bkey))
         {
             val b = bs.get(bkey) //button
 
             val mInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-            val key = mInflater.inflate(R.layout.ckbdd_key, null).apply {
+            val key = mInflater.inflate(R.layout.ckbdd_button, null).apply {
 
                 buttonsSettings.reset(LVL_B)
                 if (b.containsKey("settings"))
@@ -126,14 +123,15 @@ class CKBDDton2view
                     if (cmd.containsKey("normal") && !cmd.get("normal").isEmpty)
                     {
                         key.setOnClickListener { onClick(cmd.get("normal")) }
-                    }
-                    if (cmd.containsKey("long") && !cmd.get("long").isEmpty)
-                    {
-                        key.setOnLongClickListener { onClick(cmd.get("long")) }
-                    }
-                    else // If no Long Click is defined then repeat the key
-                    {
-                        key.setOnTouchListener(CKBDDrepeatListener(buttonsSettings.repeatInitialInterval.get(), buttonsSettings.repeatInterval.get(), { onClick(cmd.get("normal")) } ))
+
+                        if (cmd.containsKey("long") && !cmd.get("long").isEmpty)
+                        {
+                            key.setOnLongClickListener { onClick(cmd.get("long")) }
+                        }
+                        else // If no Long Click is defined then repeat the key
+                        {
+                            key.setOnTouchListener(CKBDDrepeatListener(buttonsSettings.repeatInitialInterval.get(), buttonsSettings.repeatInterval.get(), { onClick(cmd.get("normal")) } ))
+                        }
                     }
                 }
 

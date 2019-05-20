@@ -8,11 +8,11 @@ import android.view.View.OnTouchListener;
 
 /**
  * A class, that can be used as a TouchListener on any view (e.g. a Button).
- * It cyclically runs a clickListener, emulating keyboard-like behaviour. First
+ * It cyclically runs a {@link OnClickListener}, emulating keyboard-like behaviour. First
  * click is fired immediately, next one after the initialInterval, and subsequent
  * ones after the normalInterval.
  *
- * <p>Interval is scheduled after the onClick completes, so it has to run fast.
+ * Interval is scheduled after the onClick completes, so it has to run fast.
  * If it runs slow, it does not generate skipped onClicks. Can be rewritten to
  * achieve this.
  */
@@ -48,10 +48,8 @@ public class CKBDDrepeatListener implements OnTouchListener
 
     /**
      * @param initialInterval The interval after first click event
-     * @param normalInterval The interval after second and subsequent click
-     *       events
-     * @param clickListener The OnClickListener, that will be called
-     *       periodically
+     * @param normalInterval The interval after second and subsequent click events
+     * @param clickListener The {@link OnClickListener}, that will be called periodically
      */
     public CKBDDrepeatListener(int initialInterval, int normalInterval, OnClickListener clickListener)
     {

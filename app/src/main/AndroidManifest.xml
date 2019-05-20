@@ -30,6 +30,9 @@
         <activity android:name=".CKBDDsetbuttons"/>
         <activity android:name=".CKBDDsetrows"/>
         <activity android:name=".CKBDDsetkeyboards"/>
+        <activity android:name=".CKBDDsetbutton"/>
+        <activity android:name=".CKBDDsetrow"/>
+        <activity android:name=".CKBDDsetkeyboard"/>
 
     </application>
 
