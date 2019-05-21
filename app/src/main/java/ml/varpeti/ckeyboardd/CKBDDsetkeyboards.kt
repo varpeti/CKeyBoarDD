@@ -3,12 +3,10 @@ package ml.varpeti.ckeyboardd
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
 import kotlinx.android.synthetic.main.ckbdd_list.*
-import ml.varpeti.ton.Ton
 
 class CKBDDsetkeyboards : AppCompatActivity()
 {
@@ -37,12 +35,26 @@ class CKBDDsetkeyboards : AppCompatActivity()
             view!!.layoutParams = layoutparams
             list.addView(view)
         }
+
+        val keyboardID = "New"
+        val keyboardButton = Button(this)
+        keyboardButton.text=keyboardID
+        keyboardButton.setOnClickListener { onClick("") }
+        list.addView(keyboardButton)
     }
 
     private fun onClick(id : String)
     {
         val intent = Intent(this,CKBDDsetkeyboard::class.java)
         intent.putExtra("id",id)
-        startActivity(intent)
+        startActivityForResult(intent,3373)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
+    {
+        when (requestCode)
+        {
+            3373 -> recreate() //If we arrive here after setting
+        }
     }
 }

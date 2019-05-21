@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+    <ScrollView android:layout_width="match_parent" android:layout_height="wrap_content" tools:ignore="UselessParent">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                      android:orientation="vertical">
+            <TextView
+                    android:text="@string/id"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/lid"
+                    android:labelFor="@id/tid"/>
+            <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:id="@+id/tid"
+                    android:inputType="textMultiLine"
+                    />
+            <TextView
+                    android:text="@string/list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/llist"
+                    android:labelFor="@id/buttons" />
+
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                              android:orientation="vertical" android:id="@+id/buttons">
+            </LinearLayout>
+            <Button
+                    android:text="@string/addnew"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:id="@+id/bnew" android:layout_marginBottom="8dp"
+            />
+            <Button
+                    android:text="@string/save"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:id="@+id/bsave"
+                    android:layout_marginBottom="8dp"
+            />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

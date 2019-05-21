@@ -36,12 +36,26 @@ class CKBDDsetbuttons : AppCompatActivity()
 
             list.getChildAt(i*2+1).layoutParams=layoutparams
         }
+
+        val buttonID = "New"
+        val buttonButton = Button(this)
+        buttonButton.text=buttonID
+        buttonButton.setOnClickListener { onClick("") }
+        list.addView(buttonButton)
     }
 
     private fun onClick(id : String)
     {
         val intent = Intent(this,CKBDDsetbutton::class.java)
         intent.putExtra("id",id)
-        startActivity(intent)
+        startActivityForResult(intent,3373)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
+    {
+        when (requestCode)
+        {
+            3373 -> recreate() //If we arrive here after setting
+        }
     }
 }

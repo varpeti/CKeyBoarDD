@@ -43,7 +43,10 @@ class CKBDDbuttonsSettings
         }
     }
 
-    var height = Tway(100)
+    //TODO settings documentation
+
+    // The default values are configured in Samsung Galaxy Note 9, so it will be ugly in other devices. But the user have the option of defining by itself the values.
+    var height = Tway(100) // In the ton files it is 125 in all keyboards, and 120 in "*num" rows.
     var width = Tway(1F)
     var horizontalMargin  = Tway(2)
     var verticalMargin = Tway(2)

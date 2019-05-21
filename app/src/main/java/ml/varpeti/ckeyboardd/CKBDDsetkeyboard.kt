@@ -5,22 +5,30 @@ import android.os.Environment
 import android.support.v7.app.AppCompatActivity
 import android.text.InputType
 import android.widget.EditText
-import kotlinx.android.synthetic.main.ckbdd_edit_row_keyboard.*
+import kotlinx.android.synthetic.main.ckbdd_edit_list.*
 import ml.varpeti.ton.Ton
+import java.io.File
 
 class CKBDDsetkeyboard : AppCompatActivity()
 {
     private lateinit var ks : Ton
-    private val fileName = "${Environment.getExternalStorageDirectory().absolutePath}/CKeyBoarDD/k.ton"
+    private val ex = "${Environment.getExternalStorageDirectory().absolutePath}/CKeyBoarDD"
+    private val fileName = "$ex/k.ton"
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.ckbdd_edit_row_keyboard)
+        setContentView(R.layout.ckbdd_edit_list)
+
+        bnew.setOnClickListener { addNew() }
+        bsave.setOnClickListener { save() }
+        llist.text = getString(R.string.rows)
 
         ks = Ton.parsefromFile(fileName) //Keyboards
 
         val id = intent.getStringExtra("id")
+
+        if (!ks.containsKey(id)) return
         val k = ks.get(id)
 
         //ID
@@ -34,9 +42,6 @@ class CKBDDsetkeyboard : AppCompatActivity()
             buttons.addView(row)
         }
 
-        bnew.setOnClickListener { addNew() }
-        bsave.setOnClickListener { save() }
-
     }
 
     private fun addNew()
@@ -48,7 +53,39 @@ class CKBDDsetkeyboard : AppCompatActivity()
 
     private fun save()
     {
-        //TODO
+        val id = tid.text.toString()
+        ks.remove(id) // Delete if already exist
+        ks.put(id) //If we modify the ID the old one will remain
+        val k = ks.get(id)
+        k.put("rows")
+        val rows = k.get("rows")
+
+        var n = 0
+        for (i in 0 until buttons.childCount)
+        {
+            val button = buttons.getChildAt(i) as EditText
+            val bid = button.text.toString()
+            if (bid == "") continue // The empty is deleted
+            rows.put("$n",bid)
+            n++
+        }
+
+        /*TODO settings
+        //SETTINGS
+        b.put("settings")
+        val settings = b.get("settings")
+        settings.put(tsettings.text.toString())
+        */
+
+        //Write out
+        File(fileName).bufferedWriter().use{ out ->
+            out.write(ks.toString())
+        }
+
+        //This will tell the IMS it should reload. The IMS checks every onStartInputView.
+        File("$ex/ch").createNewFile()
+
+        finish()
     }
 
 

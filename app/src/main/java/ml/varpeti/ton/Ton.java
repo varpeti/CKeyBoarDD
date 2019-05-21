@@ -85,6 +85,11 @@ public class Ton implements Serializable, Cloneable
         return keyvalues.isEmpty();
     }
 
+    public void remove(String key)
+    {
+        keyvalues.remove(key);
+    }
+
     //*/// Extra HasMap manipulation
 
     // If the key already exist don't overwrite, also has no return value

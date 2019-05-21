@@ -1,9 +1,10 @@
 <resources>
     <string name="app_name">CKeyBoarDD</string>
     <string name="testbox">TestBox</string>
-    <string name="rows">rows</string>
-    <string name="keyboards">keyboards</string>
-    <string name="keys">keys</string>
+    <string name="rows">Rows</string>
+    <string name="keyboards">Keyboards</string>
+    <string name="buttons">Buttons</string>
+    <string name="keys">Keys</string>
     <string name="settings">Settings</string>
     <string name="set_input_method">Set Input Method</string>
     <string name="enable_input_method">Enable Input Method</string>
@@ -15,5 +16,5 @@
     <string name="long_click">Long click</string>
     <string name="save">SAVE</string>
     <string name="addnew">NEW</string>
-    <string name="buttons">Buttons</string>
+    <string name="list">List</string>
 </resources>

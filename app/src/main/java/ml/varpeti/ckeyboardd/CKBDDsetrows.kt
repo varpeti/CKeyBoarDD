@@ -29,13 +29,28 @@ class CKBDDsetrows : AppCompatActivity()
             rowButton.setOnClickListener { onClick(rowID) }
             list.addView(rowButton,i*2)
         }
+
+        val rowID = "New"
+        val rowButton = Button(this)
+        rowButton.text=rowID
+        rowButton.setOnClickListener { onClick("") }
+        list.addView(rowButton)
     }
 
     private fun onClick(id : String)
     {
         val intent = Intent(this,CKBDDsetrow::class.java)
         intent.putExtra("id",id)
-        startActivity(intent)
+        startActivityForResult(intent,3373)
+    }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
+    {
+        when (requestCode)
+        {
+            3373 -> recreate() //If we arrive here after setting
+        }
     }
 
 }
