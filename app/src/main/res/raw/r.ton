@@ -1,293 +1,293 @@
-num
+normal:num
     settings
         Height
             120
     buttons
         0
-            0
+            normal:0
         1
-            1
+            normal:1
         2
-            2
+            normal:2
         3
-            3
+            normal:3
         4
-            4
+            normal:4
         5
-            5
+            normal:5
         6
-            6
+            normal:6
         7
-            7
+            normal:7
         8
-            8
+            normal:8
         9
-            9
-a1
+            normal:9
+normal:a1
     buttons
         0
-            q
+            normal:q
         1
-            w
+            normal:w
         2
-            e
+            normal:e
         3
-            r
+            normal:r
         4
-            t
+            normal:t
         5
-            z
+            normal:z
         6
-            u
+            normal:u
         7
-            i
+            normal:i
         8
-            o
+            normal:o
         9
-            p
-a2
+            normal:p
+normal:a2
     buttons
         0
-            a
+            normal:a
         1
-            s
+            normal:s
         2
-            d
+            normal:d
         3
-            f
+            normal:f
         4
-            g
+            normal:g
         5
-            h
+            normal:h
         6
-            j
+            normal:j
         7
-            k
+            normal:k
         8
-            l
+            normal:l
         9
-            backspace
-a3
+            function:backspace
+normal:a3
     buttons
         0
-            shiftin
+            function:shiftin
         1
-            y
+            normal:y
         2
-            x
+            normal:x
         3
-            c
+            normal:c
         4
-            v
+            normal:v
         5
-            b
+            normal:b
         6
-            n
+            normal:n
         7
-            m
+            normal:m
         8
-            ?
+            normal:?
         9
-            return
-a4
+            function:return
+normal:a4
     buttons
         0
-            ctrl
+            function:ctrl
         1
-            ,
+            normal:,
         2
-            .
+            normal:.
         3
-            -
+            normal:-
         4
-            space
+            function:space
         5
-            cursorleft
+            function:cursorleft
         6
-            cursordown
+            function:cursordown
         7
-            cursorup
+            function:cursorup
         8
-            cursorright
-snum
+            function:cursorright
+shift:num
     settings
         Height
             120
     buttons
         0
-            s0
+            shift:0
         1
-            s1
+            shift:1
         2
-            s2
+            shift:2
         3
-            s3
+            shift:3
         4
-            s4
+            shift:4
         5
-            s5
+            shift:5
         6
-            s6
+            shift:6
         7
-            s7
+            shift:7
         8
-            s8
+            shift:8
         9
-            s9
-sa1
+            shift:9
+shift:a1
     buttons
         0
-            sq
+            shift:q
         1
-            sw
+            shift:w
         2
-            se
+            shift:e
         3
-            sr
+            shift:r
         4
-            st
+            shift:t
         5
-            sz
+            shift:z
         6
-            su
+            shift:u
         7
-            si
+            shift:i
         8
-            so
+            shift:o
         9
-            sp
-sa2
+            shift:p
+shift:a2
     buttons
         0
-            sa
+            shift:a
         1
-            ss
+            shift:s
         2
-            sd
+            shift:d
         3
-            sf
+            shift:f
         4
-            sg
+            shift:g
         5
-            sh
+            shift:h
         6
-            sj
+            shift:j
         7
-            sk
+            shift:k
         8
-            sl
+            shift:l
         9
-            backspace
-sa3
+            function:backspace
+shift:a3
     buttons
         0
-            shiftout
+            function:shiftout
         1
-            sy
+            shift:y
         2
-            sx
+            shift:x
         3
-            sc
+            shift:c
         4
-            sv
+            shift:v
         5
-            sb
+            shift:b
         6
-            sn
+            shift:n
         7
-            sm
+            shift:m
         8
-            ?
+            normal:?
         9
-            return
-cnum
+            function:return
+capslock:num
     settings
         Height
             120
     buttons
         0
-            c0
+            capslock:0
         1
-            c1
+            capslock:1
         2
-            c2
+            capslock:2
         3
-            c3
+            capslock:3
         4
-            c4
+            capslock:4
         5
-            c5
+            capslock:5
         6
-            c6
+            capslock:6
         7
-            c7
+            capslock:7
         8
-            c8
+            capslock:8
         9
-            c9
-ca1
+            capslock:9
+capslock:a1
     buttons
         0
-            cq
+            capslock:q
         1
-            cw
+            capslock:w
         2
-            ce
+            capslock:e
         3
-            cr
+            capslock:r
         4
-            ct
+            capslock:t
         5
-            cz
+            capslock:z
         6
-            cu
+            capslock:u
         7
-            ci
+            capslock:i
         8
-            co
+            capslock:o
         9
-            cp
-ca2
+            capslock:p
+capslock:a2
     buttons
         0
-            ca
+            capslock:a
         1
-            cs
+            capslock:s
         2
-            cd
+            capslock:d
         3
-            cf
+            capslock:f
         4
-            cg
+            capslock:g
         5
-            ch
+            capslock:h
         6
-            cj
+            capslock:j
         7
-            ck
+            capslock:k
         8
-            cl
+            capslock:l
         9
-            backspace
-ca3
+            function:backspace
+capslock:a3
     buttons
         0
-            shiftout
+            function:shiftout
         1
-            cy
+            capslock:y
         2
-            cx
+            capslock:x
         3
-            cc
+            capslock:c
         4
-            cv
+            capslock:v
         5
-            cb
+            capslock:b
         6
-            cn
+            capslock:n
         7
-            cm
+            capslock:m
         8
-            ?
+            normal:?
         9
-            return
+            function:return

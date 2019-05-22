@@ -46,7 +46,7 @@ class CKBDDton2view
                 val keyboardLinearLayout = LinearLayout(context)
                 keyboardLinearLayout.orientation = LinearLayout.VERTICAL
                 rows(context, ks.get(kkey).get("rows").keyArrayList,keyboardLinearLayout,onClick)
-                keyboardLinearLayout.setBackgroundColor(buttonsSettings.secondaryBackgroundColor.get())
+                keyboardLinearLayout.setBackgroundColor(buttonsSettings.keyboardBackgroundColor.get())
                 layouts[kkey] = keyboardLinearLayout
             }
         }
@@ -80,9 +80,10 @@ class CKBDDton2view
             layoutparams.setMargins(0, buttonsSettings.horizontalMargin.get(), 0, buttonsSettings.horizontalMargin.get())
 
             //Background color (secondary)
-            rowLinearLayout.setBackgroundColor(buttonsSettings.secondaryBackgroundColor.get())
+            rowLinearLayout.setBackgroundColor(buttonsSettings.rowBackgroundColor.get())
 
             rowLinearLayout.layoutParams = layoutparams
+
             keyboard.addView(rowLinearLayout)
         }
     }
@@ -146,7 +147,7 @@ class CKBDDton2view
                 layoutparams.setMargins(buttonsSettings.verticalMargin.get(), 0, buttonsSettings.verticalMargin.get(), 0)
 
                 //Colors
-                key.setBackgroundColor(buttonsSettings.primaryBackgroundColor.get())
+                key.setBackgroundColor(buttonsSettings.buttonBackgroundColor.get())
                 key.primary.setTextColor(buttonsSettings.primaryTextColor.get())
                 key.secondary.setTextColor(buttonsSettings.secondaryTextColor.get())
 

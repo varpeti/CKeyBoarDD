@@ -144,6 +144,34 @@ public class Ton implements Serializable, Cloneable
         return ret;
     }
 
+    //
+
+    public void putParsedfromFile(String key, String fileName) throws IOException
+    {
+        FileReader fileReader = new FileReader(fileName);
+        BufferedReader bufferedReader = new BufferedReader(fileReader);
+        try
+        {
+            this.put(key,parsefromString(bufferedReader));
+        }
+        finally
+        {
+            bufferedReader.close();
+        }
+    }
+
+    public void putParsedfromString(String key, String raw) throws IOException
+    {
+        InputStream is = new ByteArrayInputStream(raw.getBytes());
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(is));
+        this.put(key,parsefromString(bufferedReader));
+    }
+
+    public void putParsedfromString(String key, BufferedReader bufferedReader) throws IOException
+    {
+        this.put(key,parsefromString(bufferedReader));
+    }
+
     //*/// Statics
 
     static public Ton parsefromFile(String fileName) throws IOException
@@ -158,7 +186,6 @@ public class Ton implements Serializable, Cloneable
         {
             bufferedReader.close();
         }
-
     }
 
     static public Ton parsefromString(String raw) throws IOException

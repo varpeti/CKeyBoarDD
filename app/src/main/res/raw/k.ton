@@ -4,42 +4,42 @@ main
             125
     rows
         0
-            num
+            normal:num
         1
-            a1
+            normal:a1
         2
-            a2
+            normal:a2
         3
-            a3
+            normal:a3
         4
-            a4
+            normal:a4
 shift
     settings
         Height
             125
     rows
         0
-            snum
+            shift:num
         1
-            sa1
+            shift:a1
         2
-            sa2
+            shift:a2
         3
-            sa3
+            shift:a3
         4
-            a4
+            normal:a4
 caps
     settings
         Height
             125
     rows
         0
-            cnum
+            capslock:num
         1
-            ca1
+            capslock:a1
         2
-            ca2
+            capslock:a2
         3
-            ca3
+            capslock:a3
         4
-            a4
+            normal:a4

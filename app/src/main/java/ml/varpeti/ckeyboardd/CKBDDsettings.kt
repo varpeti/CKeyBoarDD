@@ -82,7 +82,7 @@ class CKBDDsettings : AppCompatActivity()
 
     private fun resetDefaultSettings() : Boolean
     {
-        Toast.makeText(this, "The keyboard is reseated.", Toast.LENGTH_LONG).show()
+        Toast.makeText(this, "The keyboard is reset.", Toast.LENGTH_LONG).show()
         copyResources(R.raw.b,"b.ton")
         copyResources(R.raw.r,"r.ton")
         copyResources(R.raw.k,"k.ton")

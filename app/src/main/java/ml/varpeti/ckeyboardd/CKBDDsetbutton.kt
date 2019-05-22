@@ -22,10 +22,6 @@ class CKBDDsetbutton : AppCompatActivity()
         bsave.setOnClickListener { save() }
         bsettings.setOnClickListener { settings() }
 
-        //TODO
-        tcmdnormal.isEnabled = false
-        tcmdlong.isEnabled = false
-
         val id = intent.getStringExtra("id")
         old = id
 
@@ -71,27 +67,38 @@ class CKBDDsetbutton : AppCompatActivity()
         val id = tid.text.toString().trim()
         if (id.isBlank())  // Delete the old if ID is blank
         {
-            ton2View.ks.remove(old)
+            ton2View.bs.remove(old)
         }
         else // If ID is not empty
         {
-            ton2View.ks.remove(id) // Delete if already exist
-            ton2View.ks.put(id) // If we modify the ID the old one will remain
+            ton2View.bs.remove(id) // Delete if already exist
+            ton2View.bs.put(id) // If we modify the ID the old one will remain
             val b = ton2View.bs.get(id)
 
 
             //SHOW
             b.put("show")
             val show = b.get("show")
-            if (tshowprimary.text.toString() != "") {
+            if (tshowprimary.text.toString().isNotBlank())
+            {
                 show.put("primary", tshowprimary.text.toString().trim())
             }
-            if (tshowsecondary.text.toString() != "") {
+            if (tshowsecondary.text.toString().isNotBlank())
+            {
                 show.put("secondary", tshowsecondary.text.toString().trim())
             }
 
             //CMD
-            //TODO
+            b.put("cmd")
+            val cmd = b.get("cmd")
+            if (tcmdnormal.text.toString().isNotBlank())
+            {
+                cmd.putParsedfromString("normal",tcmdnormal.text.toString())
+            }
+            if (tcmdlong.text.toString().isNotBlank())
+            {
+                cmd.putParsedfromString("long",tcmdlong.text.toString())
+            }
 
             //SETTINGS
             b.put("settings")

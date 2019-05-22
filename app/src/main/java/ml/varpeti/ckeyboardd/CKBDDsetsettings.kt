@@ -1,10 +1,8 @@
 package ml.varpeti.ckeyboardd
 
 import android.content.Context
-import android.text.InputFilter
 import android.text.InputType
 import android.text.method.DigitsKeyListener
-import android.util.Log
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -24,8 +22,9 @@ class CKBDDsetsettings
         Options("SecondaryTextSize","Float"),
         Options("PrimaryTextColor","Color"),
         Options("SecondaryTextColor","Color"),
-        Options("PrimaryBackgroundColor","Color"),
-        Options("SecondaryBackgroundColor","Color"),
+        Options("ButtonBackgroundColor","Color"),
+        Options("RowBackgroundColor","Color"),
+        Options("KeyboardBackgroundColor","Color"),
         Options("RepeatInitialInterval","Int"),
         Options("RepeatInterval","Int")
     )
