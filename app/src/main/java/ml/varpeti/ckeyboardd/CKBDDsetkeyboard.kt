@@ -110,4 +110,11 @@ class CKBDDsetkeyboard : AppCompatActivity()
         }
     }
 
+    /* TODO onSaveInstanceState
+    public override fun onSaveInstanceState(savedInstanceState: Bundle)
+    {
+        super.onSaveInstanceState(savedInstanceState)
+
+    }*/
+
 }

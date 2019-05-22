@@ -45,6 +45,7 @@ class CKBDDsetbutton : AppCompatActivity()
             }
         }
 
+        //TODO CMD be more user friendly here /right after the CMD system rework/
         //CMD
         if (b.containsKey("cmd"))
         {
@@ -133,4 +134,12 @@ class CKBDDsetbutton : AppCompatActivity()
             ssView.addView(sView)
         }
     }
+
+    /* TODO onSaveInstanceState
+    public override fun onSaveInstanceState(savedInstanceState: Bundle)
+    {
+        super.onSaveInstanceState(savedInstanceState)
+
+    }*/
+
 }
