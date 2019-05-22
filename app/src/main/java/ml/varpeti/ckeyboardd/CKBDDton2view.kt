@@ -2,11 +2,13 @@ package ml.varpeti.ckeyboardd
 
 import android.content.Context
 import android.os.Environment
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import kotlinx.android.synthetic.main.ckbdd_button.view.*
 import ml.varpeti.ton.Ton
+import java.lang.Math.round
 
 //TODO more/better Ton files error handling
 //TODO Ton files documentation
@@ -74,7 +76,7 @@ class CKBDDton2view
             }
 
             //Size
-            val layoutparams = LinearLayout.LayoutParams(-1,buttonsSettings.height.get())
+            val layoutparams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
 
             //Margin
             layoutparams.setMargins(0, buttonsSettings.horizontalMargin.get(), 0, buttonsSettings.horizontalMargin.get())
@@ -111,12 +113,14 @@ class CKBDDton2view
                     if (show.containsKey("primary") && !show.get("primary").isEmpty)
                     {
                         primary.text = b.get("show").get("primary").first()
-                        primary.textSize=buttonsSettings.primaryTextSize.get()
+                        //primary.textSize=buttonsSettings.primaryTextSize.get()
+                        primary.setTextSize(TypedValue.COMPLEX_UNIT_SP,buttonsSettings.primaryTextSize.get())
                     }
                     if (show.containsKey("secondary") && !show.get("secondary").isEmpty)
                     {
                         secondary.text = b.get("show").get("secondary").first()
-                        secondary.textSize=buttonsSettings.secondaryTextSize.get()
+                        //secondary.textSize=buttonsSettings.secondaryTextSize.get()
+                        secondary.setTextSize(TypedValue.COMPLEX_UNIT_SP,buttonsSettings.secondaryTextSize.get())
                     }
                 }
 
@@ -140,7 +144,9 @@ class CKBDDton2view
                 }
 
                 //Size
-                val layoutparams = LinearLayout.LayoutParams(0,buttonsSettings.height.get())
+                val height = round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, buttonsSettings.height.get(), resources.displayMetrics))
+
+                val layoutparams = LinearLayout.LayoutParams(0,height)
                 layoutparams.weight=buttonsSettings.width.get()
 
                 //Margin

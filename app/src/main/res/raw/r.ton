@@ -1,7 +1,7 @@
 normal:num
     settings
         Height
-            120
+            45
     buttons
         0
             normal:0
@@ -112,7 +112,7 @@ normal:a4
 shift:num
     settings
         Height
-            120
+            45
     buttons
         0
             shift:0
@@ -203,7 +203,7 @@ shift:a3
 capslock:num
     settings
         Height
-            120
+            45
     buttons
         0
             capslock:0

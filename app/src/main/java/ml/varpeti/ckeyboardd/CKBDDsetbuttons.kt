@@ -3,6 +3,8 @@ package ml.varpeti.ckeyboardd
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
+import android.util.TypedValue
 import android.widget.Button
 import android.widget.LinearLayout
 import kotlinx.android.synthetic.main.ckbdd_list.*
@@ -21,7 +23,11 @@ class CKBDDsetbuttons : AppCompatActivity()
         val arrayList = ArrayList(ton2view.bs.keySet())
         ton2view.buttons(this,arrayList,list) {true}
 
-        val layoutparams = LinearLayout.LayoutParams(round(ton2view.buttonsSettings.height.get()*ton2view.buttonsSettings.width.get()),ton2view.buttonsSettings.height.get())
+        //It is definetly not an accurate preview, but good enough
+        val height = round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, ton2view.buttonsSettings.height.get(), resources.displayMetrics))
+        val width = round(height*ton2view.buttonsSettings.width.get())
+
+        val layoutparams = LinearLayout.LayoutParams(width,height)
         layoutparams.setMargins(0,ton2view.buttonsSettings.horizontalMargin.get(),0,ton2view.buttonsSettings.horizontalMargin.get())
 
         val max = list.childCount

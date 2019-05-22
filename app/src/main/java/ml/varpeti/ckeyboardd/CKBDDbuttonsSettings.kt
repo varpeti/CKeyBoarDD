@@ -46,20 +46,21 @@ class CKBDDbuttonsSettings
 
     //TODO settings documentation
 
-    // The default values are configured in Samsung Galaxy Note 9, so it will be ugly in other devices. But the user have the option of defining by itself the values.
-    var height = Tway(100) // In the ton files it is 125 in all keyboards, and 120 in "*num" rows.
-    var width = Tway(1F)
-    var horizontalMargin  = Tway(2)
-    var verticalMargin = Tway(2)
-    var primaryTextSize = Tway(25F)
-    var secondaryTextSize = Tway(18F)
+    // DEPRECATED comment // The default values are configured in Samsung Galaxy Note 9, so it can be ugly in other devices. But the user have the option of defining by itself the values.
+    // The DIP and SP units are solved this problem I think. (tested via Galaxy s6)
+    var height = Tway(50F) //DIP
+    var width = Tway(1F) //WEIGHT
+    var horizontalMargin  = Tway(2) //PX
+    var verticalMargin = Tway(2) //PX
+    var primaryTextSize = Tway(25F) //SP
+    var secondaryTextSize = Tway(18F) //SP
     var primaryTextColor = Tway(Color.parseColor("#ffffff"))
     var secondaryTextColor = Tway(Color.parseColor("#b0b0b0"))
     var buttonBackgroundColor = Tway(Color.parseColor("#000000"))
     var rowBackgroundColor = Tway(Color.parseColor("#404040"))
     var keyboardBackgroundColor = Tway(Color.parseColor("#404040"))
-    var repeatInitialInterval = Tway(400)
-    var repeatInterval = Tway(100)
+    var repeatInitialInterval = Tway(400) //MS
+    var repeatInterval = Tway(100) //MS
 
     fun change(settings : Ton,lvl : Int)
     {
@@ -69,7 +70,7 @@ class CKBDDbuttonsSettings
             {
                 if (!settings.get(key).isEmpty) when (key)
                 {
-                    "Height"                    -> height.set(settings.get(key).first().toInt(),lvl)
+                    "Height"                    -> height.set(settings.get(key).first().toFloat(),lvl)
                     "Width"                     -> width.set(settings.get(key).first().toFloat(),lvl)
                     "HorizontalMargin"          -> horizontalMargin.set(settings.get(key).first().toInt(),lvl)
                     "VerticalMargin"            -> verticalMargin.set(settings.get(key).first().toInt(),lvl)
