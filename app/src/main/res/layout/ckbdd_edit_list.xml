@@ -17,7 +17,7 @@
                     android:layout_height="wrap_content"
                     android:ems="10"
                     android:id="@+id/tid"
-                    android:inputType="textMultiLine"
+                    android:inputType="text"
                     />
             <TextView
                     android:text="@string/list"
@@ -26,18 +26,37 @@
                     android:id="@+id/llist"
                     android:labelFor="@id/buttons" />
 
-            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                              android:orientation="vertical" android:id="@+id/buttons">
+            <LinearLayout android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:orientation="vertical"
+                          android:id="@+id/buttons">
             </LinearLayout>
             <Button
                     android:text="@string/addnew"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:id="@+id/bnew" android:layout_marginBottom="8dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/bnew"
+                    android:layout_marginBottom="8dp"
             />
+            <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/ssView"
+                    android:layout_marginBottom="8dp">
+                <Button
+                        android:text="@string/settings"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/bsettings"
+                        android:layout_marginBottom="8dp"
+                />
+            </LinearLayout>
             <Button
                     android:text="@string/save"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:id="@+id/bsave"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/bsave"
                     android:layout_marginBottom="8dp"
             />
         </LinearLayout>

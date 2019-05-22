@@ -1,6 +1,7 @@
 package ml.varpeti.ckeyboardd
 
 import android.Manifest
+import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -12,6 +13,8 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
+import kotlinx.android.synthetic.main.ckbdd_settings_main.*
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
@@ -52,6 +55,8 @@ class CKBDDsettings : AppCompatActivity()
         {
             copyResources(R.raw.k,"k.ton")
         }
+
+        reset_default_settings.setOnLongClickListener { resetDefaultSettings() }
     }
 
     fun onClick(v : View)
@@ -61,7 +66,11 @@ class CKBDDsettings : AppCompatActivity()
             R.id.settings_keyboards -> startActivity(Intent(this,CKBDDsetkeyboards::class.java))
             R.id.settings_rows -> startActivity(Intent(this,CKBDDsetrows::class.java))
             R.id.settings_keys -> startActivity(Intent(this,CKBDDsetbuttons::class.java))
-            R.id.reset_default_settings -> resetDefaultSettings()
+            R.id.reset_default_settings ->
+            {
+                Toast.makeText(this, "The keyboard is reloaded. Press long if you want to reset.", Toast.LENGTH_LONG).show()
+                reload()
+            }
             R.id.enable_input_method -> startActivity(Intent(Settings.ACTION_INPUT_METHOD_SETTINGS))
             R.id.set_input_method ->
             {
@@ -71,17 +80,23 @@ class CKBDDsettings : AppCompatActivity()
         }
     }
 
-    private fun resetDefaultSettings()
+    private fun resetDefaultSettings() : Boolean
     {
+        Toast.makeText(this, "The keyboard is reseated.", Toast.LENGTH_LONG).show()
         copyResources(R.raw.b,"b.ton")
         copyResources(R.raw.r,"r.ton")
         copyResources(R.raw.k,"k.ton")
         reload()
+        return true
     }
 
     private fun reload()
     {
-        //This will tell the IMS it should reload. The IMS checks every onStartInputView.
+        // We hide the softkeyboard cos it has to reload itshelf.
+        val imm = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(settings_main.windowToken, 0)
+
+        // This will tell the IMS it should reload. The IMS checks every onStartInputView.
         File("$ex/ch").createNewFile()
     }
 

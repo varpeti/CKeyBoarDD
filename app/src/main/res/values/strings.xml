@@ -5,10 +5,9 @@
     <string name="keyboards">Keyboards</string>
     <string name="buttons">Buttons</string>
     <string name="keys">Keys</string>
-    <string name="settings">Settings</string>
     <string name="set_input_method">Set Input Method</string>
     <string name="enable_input_method">Enable Input Method</string>
-    <string name="reset_default_settings">reset default settings</string>
+    <string name="reload_reset"> Reload/Reset</string>
     <string name="primary_show">Primary show</string>
     <string name="id">ID</string>
     <string name="secondary_show">Secondary show</string>
@@ -17,4 +16,5 @@
     <string name="save">SAVE</string>
     <string name="addnew">NEW</string>
     <string name="list">List</string>
+    <string name="settings">Settings</string>
 </resources>

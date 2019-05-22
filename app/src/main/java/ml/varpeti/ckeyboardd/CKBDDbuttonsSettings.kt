@@ -1,6 +1,7 @@
 package ml.varpeti.ckeyboardd
 
 import android.graphics.Color
+import android.util.Log
 import ml.varpeti.ton.Ton
 
 const val LVL_K = 0
@@ -63,20 +64,32 @@ class CKBDDbuttonsSettings
     {
         for (key in settings.keySet())
         {
-            if (!settings.get(key).isEmpty) when (key)
+            try
             {
-                "Height"                    -> height.set(settings.get(key).first().toInt(),lvl)
-                "Width"                     -> width.set(settings.get(key).first().toFloat(),lvl)
-                "HorizontalMargin"          -> horizontalMargin.set(settings.get(key).first().toInt(),lvl)
-                "VerticalMargin"            -> verticalMargin.set(settings.get(key).first().toInt(),lvl)
-                "PrimaryTextSize"           -> primaryTextSize.set(settings.get(key).first().toFloat(),lvl)
-                "SecondaryTextSize"         -> secondaryTextSize.set(settings.get(key).first().toFloat(),lvl)
-                "PrimaryTextColor"          -> primaryTextColor.set(Color.parseColor(settings.get(key).first()),lvl)
-                "SecondaryTextColor"        -> secondaryTextColor.set(Color.parseColor(settings.get(key).first()),lvl)
-                "PrimaryBackgroundColor"    -> primaryBackgroundColor.set(Color.parseColor(settings.get(key).first()),lvl)
-                "SecondaryBackgroundColor"  -> secondaryBackgroundColor.set(Color.parseColor(settings.get(key).first()),lvl)
-                "repeatInitialInterval"     -> repeatInitialInterval.set(settings.get(key).first().toInt(),lvl)
-                "repeatInterval"            -> repeatInterval.set(settings.get(key).first().toInt(),lvl)
+                if (!settings.get(key).isEmpty) when (key)
+                {
+                    "Height"                    -> height.set(settings.get(key).first().toInt(),lvl)
+                    "Width"                     -> width.set(settings.get(key).first().toFloat(),lvl)
+                    "HorizontalMargin"          -> horizontalMargin.set(settings.get(key).first().toInt(),lvl)
+                    "VerticalMargin"            -> verticalMargin.set(settings.get(key).first().toInt(),lvl)
+                    "PrimaryTextSize"           -> primaryTextSize.set(settings.get(key).first().toFloat(),lvl)
+                    "SecondaryTextSize"         -> secondaryTextSize.set(settings.get(key).first().toFloat(),lvl)
+                    "PrimaryTextColor"          -> primaryTextColor.set(Color.parseColor(settings.get(key).first()),lvl)
+                    "SecondaryTextColor"        -> secondaryTextColor.set(Color.parseColor(settings.get(key).first()),lvl)
+                    "PrimaryBackgroundColor"    -> primaryBackgroundColor.set(Color.parseColor(settings.get(key).first()),lvl)
+                    "SecondaryBackgroundColor"  -> secondaryBackgroundColor.set(Color.parseColor(settings.get(key).first()),lvl)
+                    "RepeatInitialInterval"     -> repeatInitialInterval.set(settings.get(key).first().toInt(),lvl)
+                    "RepeatInterval"            -> repeatInterval.set(settings.get(key).first().toInt(),lvl)
+                }
+            }
+            catch (ex : Exception)
+            {
+                when (ex.message) //https://developer.android.com/reference/android/graphics/Color.html#parseColor%28java.lang.String%29
+                {
+                    "Unknown color" -> Log.e("|||","Unknown color, pls use '#RRGGBB' format.")
+                    else -> Log.e("|||","${ex.message}") //TODO better
+                }
+
             }
         }
     }

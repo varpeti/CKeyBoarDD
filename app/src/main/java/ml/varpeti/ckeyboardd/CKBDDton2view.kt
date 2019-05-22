@@ -13,18 +13,21 @@ import ml.varpeti.ton.Ton
 
 class CKBDDton2view
 {
-    private val ex = "${Environment.getExternalStorageDirectory().absolutePath}/CKeyBoarDD"
+    // What encapsulation?
+    val ex = "${Environment.getExternalStorageDirectory().absolutePath}/CKeyBoarDD"
     val buttonsSettings = CKBDDbuttonsSettings()
     var ks : Ton
     var rs : Ton
     var bs : Ton
-    // What encapsulation?
+    val kton = "$ex/k.ton"
+    val rton = "$ex/r.ton"
+    val bton = "$ex/b.ton"
 
     init
     {
-        ks = Ton.parsefromFile("$ex/k.ton") //Keyboards
-        rs = Ton.parsefromFile("$ex/r.ton") //Rows
-        bs = Ton.parsefromFile("$ex/b.ton") //Buttons
+        ks = Ton.parsefromFile(kton) //Keyboards
+        rs = Ton.parsefromFile(rton) //Rows
+        bs = Ton.parsefromFile(bton) //Buttons
     }
 
     fun keyboards(context : Context, layouts : HashMap<String, View>, onClick : (cmd : Ton) -> Boolean)

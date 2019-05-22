@@ -1,19 +1,19 @@
 package ml.varpeti.ckeyboardd
 
 import android.os.Bundle
-import android.os.Environment
 import android.support.v7.app.AppCompatActivity
 import android.text.InputType
 import android.widget.EditText
+import android.widget.LinearLayout
 import kotlinx.android.synthetic.main.ckbdd_edit_list.*
-import ml.varpeti.ton.Ton
 import java.io.File
 
 class CKBDDsetkeyboard : AppCompatActivity()
 {
-    private lateinit var ks : Ton
-    private val ex = "${Environment.getExternalStorageDirectory().absolutePath}/CKeyBoarDD"
-    private val fileName = "$ex/k.ton"
+    private val ton2View = CKBDDton2view()
+    private val ss = CKBDDsetsettings()
+    private var sView : LinearLayout? = null
+    private lateinit var old : String
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
@@ -22,14 +22,14 @@ class CKBDDsetkeyboard : AppCompatActivity()
 
         bnew.setOnClickListener { addNew() }
         bsave.setOnClickListener { save() }
+        bsettings.setOnClickListener { settings() }
         llist.text = getString(R.string.rows)
 
-        ks = Ton.parsefromFile(fileName) //Keyboards
-
         val id = intent.getStringExtra("id")
+        old = id
 
-        if (!ks.containsKey(id)) return
-        val k = ks.get(id)
+        if (!ton2View.ks.containsKey(id)) return
+        val k = ton2View.ks.get(id)
 
         //ID
         tid.setText(id)
@@ -53,41 +53,61 @@ class CKBDDsetkeyboard : AppCompatActivity()
 
     private fun save()
     {
-        val id = tid.text.toString()
-        ks.remove(id) // Delete if already exist
-        ks.put(id) //If we modify the ID the old one will remain
-        val k = ks.get(id)
-        k.put("rows")
-        val rows = k.get("rows")
-
-        var n = 0
-        for (i in 0 until buttons.childCount)
+        val id = tid.text.toString().trim()
+        if (id.isBlank())  // Delete the old if ID is blank
         {
-            val button = buttons.getChildAt(i) as EditText
-            val bid = button.text.toString()
-            if (bid == "") continue // The empty is deleted
-            rows.put("$n",bid)
-            n++
+            ton2View.ks.remove(old)
+        }
+        else // If ID is not empty
+        {
+            ton2View.ks.remove(id) // Delete if already exist
+            ton2View.ks.put(id) // If we modify the ID the old one will remain
+            val k = ton2View.ks.get(id)
+            k.put("rows")
+            val rows = k.get("rows")
+
+            var n = 0
+            for (i in 0 until buttons.childCount)
+            {
+                val button = buttons.getChildAt(i) as EditText
+                val bid = button.text.toString().trim()
+                if (bid == "") continue // The empty is deleted
+                rows.put("$n",bid)
+                n++
+            }
+
+            // Save SETTINGS
+            k.put("settings")
+            val settings = k.get("settings")
+            if (sView==null) sView = ss.show(settings,this)
+            ss.save(settings,sView)
+
         }
 
-        /*TODO settings
-        //SETTINGS
-        b.put("settings")
-        val settings = b.get("settings")
-        settings.put(tsettings.text.toString())
-        */
-
         //Write out
-        File(fileName).bufferedWriter().use{ out ->
-            out.write(ks.toString())
+        File(ton2View.kton).bufferedWriter().use{ out ->
+            out.write(ton2View.ks.toString())
         }
 
         //This will tell the IMS it should reload. The IMS checks every onStartInputView.
-        File("$ex/ch").createNewFile()
+        File("${ton2View.ex}/ch").createNewFile()
 
         finish()
     }
 
-
+    private fun settings()
+    {
+        val id = tid.text.toString().trim()
+        ton2View.ks.put(id)
+        val k = ton2View.ks.get(id)
+        k.put("settings")
+        val settings = k.get("settings")
+        sView = ss.show(settings,this)
+        if (sView!=null)
+        {
+            ssView.removeView(bsettings)
+            ssView.addView(sView)
+        }
+    }
 
 }
