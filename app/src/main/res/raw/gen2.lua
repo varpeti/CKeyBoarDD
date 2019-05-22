@@ -160,9 +160,6 @@ function:ctrl
 		PrimaryTextSize
 			20
 function:space
-	show
-		size
-			2
 	cmd
 		normal
 			0
