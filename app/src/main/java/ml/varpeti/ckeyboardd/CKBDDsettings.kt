@@ -55,6 +55,10 @@ class CKBDDsettings : AppCompatActivity()
         {
             copyResources(R.raw.k,"k.ton")
         }
+        if (!File("$ex/todoremove.me").exists()) //TODO remove
+        {
+            copyResources(R.raw.todoremove,"todoremove.me")
+        }
 
         reset_default_settings.setOnLongClickListener { resetDefaultSettings() }
     }
@@ -86,6 +90,7 @@ class CKBDDsettings : AppCompatActivity()
         copyResources(R.raw.b,"b.ton")
         copyResources(R.raw.r,"r.ton")
         copyResources(R.raw.k,"k.ton")
+        copyResources(R.raw.todoremove,"todoremove.me") //TODO remove
         reload()
         return true
     }

@@ -4,7 +4,10 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.inputmethodservice.InputMethodService
+import android.os.Build
 import android.os.Environment
+import android.os.VibrationEffect
+import android.os.Vibrator
 import android.support.v4.content.ContextCompat
 import android.util.Log
 import android.view.KeyCharacterMap
@@ -14,7 +17,9 @@ import android.view.KeyEvent.ACTION_UP
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import ml.varpeti.ton.Ton
+import java.io.BufferedReader
 import java.io.File
+import java.io.FileReader
 import java.text.ParseException
 
 
@@ -35,6 +40,19 @@ class CKBDDservice : InputMethodService()
 
     }
 
+    private var vibrationTime = 100L
+    private var vibrationAmplitude = 1
+
+    private fun todoRemoveMeVibrationSettings() //TODO remove
+    {
+        val fileReader = FileReader("${Environment.getExternalStorageDirectory().absolutePath}/CKeyBoarDD/todoremove.me")
+        val bufferedReader = BufferedReader(fileReader)
+        bufferedReader.use { bufferedReader ->
+            vibrationTime = bufferedReader.readLine().toLong()
+            vibrationAmplitude = bufferedReader.readLine().toInt()
+        }
+    }
+
     override fun onStartInputView(info: EditorInfo?, restarting: Boolean)
     {
         super.onStartInputView(info, restarting)
@@ -44,6 +62,7 @@ class CKBDDservice : InputMethodService()
         if (ch.exists())
         {
             ch.delete()
+            todoRemoveMeVibrationSettings()
             setInputView(onCreateInputView())
         }
     }
@@ -222,6 +241,17 @@ class CKBDDservice : InputMethodService()
                     */
                 }
             }
+        }
+
+        val vibrator = getSystemService(VIBRATOR_SERVICE) as Vibrator
+
+        if (Build.VERSION.SDK_INT >= 26)
+        {
+            vibrator.vibrate(VibrationEffect.createOneShot(vibrationTime, vibrationAmplitude))
+        }
+        else
+        {
+            vibrator.vibrate(vibrationTime)
         }
 
         return true
